@@ -12,14 +12,14 @@
 | ID | Title | Phase | Type | Status | Priority | Score |
 |:---|:---|:---:|:---:|:---:|:---:|:---:|
 | **SGR-P0-01** | Docker SUT Feasibility Probe (Saleor 3.23) | 0 | SPIKE | Done | HIGH | 24 |
-| **SGR-P1-01** | Repository Scaffold, Governance & Registry | 1 | ENABLER | In Progress | HIGH | 22 |
-| **SGR-P1-02** | Pinned SUT Docker Compose & HTTP Poller | 1 | INFRA | Pending | HIGH | 21 |
-| **SGR-P1-03** | Screenplay Core: `CallGraphQL` Ability & Actors | 1 | CORE | Pending | HIGH | 21 |
-| **SGR-P1-04** | FR-1: Catalogue Read BDD Journey | 1 | FEATURE | Pending | HIGH | 20 |
-| **SGR-P1-05** | FR-3: Authentication Lifecycle BDD Journey | 1 | FEATURE | Pending | HIGH | 20 |
-| **SGR-P1-06** | FR-4: Schema Contract Snapshot & Diff Gate | 1 | CONTRACT | Pending | HIGH | 22 |
-| **SGR-P1-07** | NFR-6: Demo-Safe Read-Only Smoke Profile | 1 | QUALITY | Pending | MEDIUM | 18 |
-| **SGR-P1-08** | GitHub Actions CI & `npm run verify` Gate | 1 | CI/CD | Pending | HIGH | 20 |
+| **SGR-P1-01** | Repository Scaffold, Governance & Registry | 1 | ENABLER | Done | HIGH | 22 |
+| **SGR-P1-02** | Pinned SUT Docker Compose & HTTP Poller | 1 | INFRA | Done | HIGH | 21 |
+| **SGR-P1-03** | Screenplay Core: `CallGraphQL` Ability & Actors | 1 | CORE | Done | HIGH | 21 |
+| **SGR-P1-04** | FR-1: Catalogue Read BDD Journey | 1 | FEATURE | Done | HIGH | 20 |
+| **SGR-P1-05** | FR-3: Authentication Lifecycle BDD Journey | 1 | FEATURE | Done | HIGH | 20 |
+| **SGR-P1-06** | FR-4: Schema Contract Snapshot & Diff Gate | 1 | CONTRACT | Done | HIGH | 22 |
+| **SGR-P1-07** | NFR-6: Demo-Safe Read-Only Smoke Profile | 1 | QUALITY | Done | MEDIUM | 18 |
+| **SGR-P1-08** | GitHub Actions CI & `npm run verify` Gate | 1 | CI/CD | Done | HIGH | 20 |
 | **SGR-P2-01** | FR-2: Stateful Checkout BDD Journey | 2 | FEATURE | Backlog | HIGH | 19 |
 | **SGR-P2-02** | FR-5: Staff Order Fulfilment Journey | 2 | FEATURE | Backlog | MEDIUM | 16 |
 | **SGR-P2-03** | NFR-1 & NFR-2: Latency Telemetry & Error Model | 2 | QUALITY | Backlog | MEDIUM | 15 |
