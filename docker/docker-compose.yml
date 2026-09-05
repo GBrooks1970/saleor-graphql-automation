@@ -1,0 +1,56 @@
+services:
+  api:
+    image: ghcr.io/saleor/saleor:3.23@sha256:ff3f5f5ebb0f40c36c8fa4cdd647be33f9db2762afc889d6c27704fc61813141
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    depends_on:
+      - db
+      - cache
+    env_file:
+      - common.env
+      - backend.env
+    volumes:
+      - saleor-media:/app/media
+
+  worker:
+    image: ghcr.io/saleor/saleor:3.23@sha256:ff3f5f5ebb0f40c36c8fa4cdd647be33f9db2762afc889d6c27704fc61813141
+    command: celery -A saleor --app=saleor.celeryconf:app worker --loglevel=info -B
+    restart: unless-stopped
+    depends_on:
+      - db
+      - cache
+    env_file:
+      - common.env
+      - backend.env
+    volumes:
+      - saleor-media:/app/media
+
+  db:
+    image: postgres:15-alpine@sha256:fe0737ba566a2c5b2a28f34433c0a423261900ec17b9bf7ad115e1aae7e57f1b
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=saleor
+      - POSTGRES_PASSWORD=saleor
+      - POSTGRES_DB=saleor
+    volumes:
+      - saleor-db:/var/lib/postgresql/data
+      - ./replica_user.sql:/docker-entrypoint-initdb.d/replica_user.sql
+
+  cache:
+    image: valkey/valkey:8.1-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    volumes:
+      - saleor-cache:/data
+
+volumes:
+  saleor-db:
+    driver: local
+  saleor-cache:
+    driver: local
+  saleor-media:
+    driver: local

@@ -1,0 +1,36 @@
+{
+  "name": "saleor-graphql-automation",
+  "version": "0.1.0",
+  "description": "Production-grade GraphQL e-commerce automation showcase built on Saleor 3.23 using Screenplay Pattern, Serenity/JS, Cucumber, and TypeScript.",
+  "license": "MIT",
+  "author": "Gary Brooks",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test:unit": "tsx --test tests/unit/**/*.spec.ts",
+    "test:contract": "tsx --test tests/contract/**/*.spec.ts",
+    "check:smoke-safety": "tsx scripts/check-smoke-safety.ts",
+    "test:smoke": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile smoke",
+    "test:api": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile api",
+    "sut:wait": "tsx scripts/wait-for-sut.ts",
+    "test": "npm run test:unit && npm run test:contract && npm run test:api",
+    "verify": "npm run typecheck && npm run test:unit && npm run check:smoke-safety && npm run test:contract && npm run test:smoke && npm run test:api"
+  },
+  "dependencies": {
+    "@graphql-inspector/core": "^4.2.1",
+    "graphql": "^16.10.0"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.9.0",
+    "@serenity-js/assertions": "^3.44.1",
+    "@serenity-js/console-reporter": "^3.44.1",
+    "@serenity-js/core": "^3.44.1",
+    "@serenity-js/cucumber": "^3.44.1",
+    "@types/node": "^22.13.0",
+    "tsx": "^4.23.1",
+    "typescript": "^5.7.3"
+  }
+}

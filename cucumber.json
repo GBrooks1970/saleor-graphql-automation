@@ -1,0 +1,36 @@
+{
+  "default": {
+    "paths": ["features/**/*.feature"],
+    "import": [
+      "features/support/**/*.ts",
+      "features/step_definitions/**/*.ts"
+    ],
+    "format": [
+      "summary"
+    ],
+    "strict": true
+  },
+  "api": {
+    "paths": ["features/**/*.feature"],
+    "import": [
+      "features/support/**/*.ts",
+      "features/step_definitions/**/*.ts"
+    ],
+    "format": [
+      "summary"
+    ],
+    "strict": true
+  },
+  "smoke": {
+    "paths": ["features/**/*.feature"],
+    "tags": "@smoke and not @mutating",
+    "import": [
+      "features/support/**/*.ts",
+      "features/step_definitions/**/*.ts"
+    ],
+    "format": [
+      "summary"
+    ],
+    "strict": true
+  }
+}
