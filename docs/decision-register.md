@@ -57,3 +57,19 @@ This register documents key architectural decisions (ADRs) governing the `saleor
 - **Context:** Saleor 3.x deprecates `checkoutPaymentCreate` in favour of the modern Transaction API (`transactionCreate`).
 - **Decision:** Automate payment creation and order completion exclusively using the Transaction API.
 - **Consequences:** Ensures compliance with current Saleor standards and aligns test journeys with modern e-commerce checkout lifecycles.
+
+---
+
+## ADR-008: Shared Typed Scenario Notes for Cross-Actor Checkout State
+- **Status:** Accepted (2026-09-08)
+- **Context:** The Customer owns the checkout lifecycle while the Admin actor supplies the staff-authorised `transactionCreate` operation. Checkout IDs, selected delivery data, totals, transaction evidence, and the resulting order must cross that actor boundary without being added to the transport-focused `CallGraphQL` Ability or leaked through global state.
+- **Decision:** Give Customer and Admin a shared, scenario-scoped typed Serenity/JS `Notepad`, recreated in the Cucumber `Before` hook. Tasks record only domain state in the notepad; `CallGraphQL` remains responsible for transport and actor-specific authentication.
+- **Consequences:** Stateful Screenplay Tasks remain composable, scenario isolation is explicit, and cross-actor collaboration does not couple checkout state to HTTP mechanics.
+
+---
+
+## ADR-009: Separate Deterministic and Live-SUT Checkout Evidence
+- **Status:** Accepted (2026-09-08)
+- **Context:** CI needs a fast, deterministic checkout path, but an embedded mock alone cannot prove that mutation documents and workflow assumptions still match Saleor 3.23. Silent fallback from an explicitly configured live endpoint could mislabel mock evidence as live evidence.
+- **Decision:** Keep the embedded stateful SUT in `npm run verify`, validate every checkout document against the pinned schema, and require a separately identified live Docker run for SGR-P2-01 acceptance. If `SALEOR_GRAPHQL_URL` is explicitly supplied but unhealthy, the Cucumber hook fails closed.
+- **Consequences:** CI remains fast while live compatibility claims stay evidence-based. Operators must bootstrap the pinned SUT and provide Admin credentials before recording live acceptance.

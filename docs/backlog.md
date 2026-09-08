@@ -1,7 +1,7 @@
 # Canonical Project Backlog: saleor-graphql-automation
 
-**Current Version:** v1  
-**Last Updated:** 2026-09-04  
+**Current Version:** v2
+**Last Updated:** 2026-09-08
 **Project:** Fourteenth Portfolio Project (P-12) — Saleor GraphQL Automation  
 **Repository:** `GBrooks1970/saleor-graphql-automation`  
 
@@ -20,7 +20,7 @@
 | **SGR-P1-06** | FR-4: Schema Contract Snapshot & Diff Gate | 1 | CONTRACT | Done | HIGH | 22 |
 | **SGR-P1-07** | NFR-6: Demo-Safe Read-Only Smoke Profile | 1 | QUALITY | Done | MEDIUM | 18 |
 | **SGR-P1-08** | GitHub Actions CI & `npm run verify` Gate | 1 | CI/CD | Done | HIGH | 20 |
-| **SGR-P2-01** | FR-2: Stateful Checkout BDD Journey | 2 | FEATURE | Backlog | HIGH | 19 |
+| **SGR-P2-01** | FR-2: Stateful Checkout BDD Journey | 2 | FEATURE | In Progress | HIGH | 19 |
 | **SGR-P2-02** | FR-5: Staff Order Fulfilment Journey | 2 | FEATURE | Backlog | MEDIUM | 16 |
 | **SGR-P2-03** | NFR-1 & NFR-2: Latency Telemetry & Error Model | 2 | QUALITY | Backlog | MEDIUM | 15 |
 | **SGR-P3-01** | Living Documentation & GitHub Pages | 3 | SHOWCASE | Backlog | LOW | 12 |
@@ -28,7 +28,7 @@
 
 ---
 
-## 2. Item Details (Phase 1 Active Slice)
+## 2. Item Details
 
 ### SGR-P1-01: Repository Scaffold, Governance & Registry
 - **Goal:** Initialize git repository, configure `.gitignore`, `package.json`, `tsconfig.json`, register in portfolio root, author initial ADRs and project contract.
@@ -61,3 +61,14 @@
 ### SGR-P1-08: GitHub Actions CI & `npm run verify` Gate
 - **Goal:** Author `.github/workflows/ci.yml` and wire `npm run verify` covering typecheck, unit, contract, smoke, and API tests.
 - **Verification:** Local `npm run verify` exits code 0; GitHub Actions workflow passes on push to `main`.
+
+### SGR-P2-01: FR-2 Stateful Checkout BDD Journey
+- **Goal:** Exercise the Saleor 3.23 checkout lifecycle from variant selection through shipping and billing addresses, delivery selection, modern `transactionCreate`, and `checkoutComplete` producing an order.
+- **Acceptance criteria:**
+  1. The scenario is tagged `@api @mutating` and remains excluded from the `@smoke and not @mutating` lane.
+  2. Checkout state is isolated per scenario with unique email and PSP references and shared safely between the Customer and Admin actors.
+  3. Every GraphQL document validates offline against `schema/saleor-3.23.graphql`.
+  4. The deterministic embedded SUT covers the successful lifecycle and the mandatory billing-address failure.
+  5. `npm run verify` passes in full.
+  6. A separate run against an explicitly configured, pinned Saleor Docker SUT produces a fully charged order; explicit live endpoints must fail closed rather than silently use the mock.
+- **Evidence boundary:** `npm run verify` is the deterministic CI gate. Live acceptance additionally follows `docs/live-sut-validation.md` and records the returned order number and statuses.
