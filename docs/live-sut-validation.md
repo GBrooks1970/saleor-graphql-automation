@@ -1,6 +1,6 @@
 # Live Saleor SUT Validation
 
-This procedure produces the live-SUT evidence required for mutating checkout journeys. The ordinary `npm run verify` gate remains deterministic and can use the embedded test SUT; it must not be represented as live Saleor evidence.
+This procedure produces the live-SUT evidence required for mutating checkout journeys. Without an explicit `SALEOR_GRAPHQL_URL`, the ordinary `npm run verify` gate always uses the embedded test SUT; it must not be represented as live Saleor evidence.
 
 ## Safety and prerequisites
 

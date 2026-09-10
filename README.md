@@ -72,7 +72,7 @@ npm install
 npm run verify
 ```
 
-The gate starts the embedded SUT when no local Saleor endpoint is available. For the separate pinned-Docker acceptance procedure, including database migration and deterministic seeding, follow [docs/live-sut-validation.md](docs/live-sut-validation.md).
+The gate always starts the embedded SUT unless `SALEOR_GRAPHQL_URL` is explicitly configured, so a running local Saleor instance cannot make deterministic verification environment-dependent. For the separate pinned-Docker acceptance procedure, including database migration and deterministic seeding, follow [docs/live-sut-validation.md](docs/live-sut-validation.md).
 
 ---
 
