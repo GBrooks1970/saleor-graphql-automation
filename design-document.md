@@ -1,6 +1,6 @@
 # Design Document: Saleor GraphQL Automation (P-12)
 
-**Status:** Approved & Active (Phase 1)  
+**Status:** Approved & Active (Phase 2)
 **Author:** Gary Brooks  
 **Date:** 2026-09-04  
 **Version:** 1.0  
@@ -102,6 +102,6 @@ saleor-graphql-automation/
 ## 4. Phase Delivery Roadmap
 
 - **Phase 0:** Feasibility Probe (Completed 2026-09-03, GO verdict).
-- **Phase 1:** Core Foundation, Schema Diffing & Read/Auth Journeys (Active).
-- **Phase 2:** Stateful Checkout, Staff Fulfilment & Advanced Error Handling.
+- **Phase 1:** Core Foundation, Schema Diffing & Read/Auth Journeys (Completed 2026-09-05).
+- **Phase 2:** Stateful Checkout, Staff Fulfilment & Advanced Error Handling (Active).
 - **Phase 3:** Serenity/JS Living Documentation, Drift Monitoring & Portfolio Showcase.

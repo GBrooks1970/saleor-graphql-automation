@@ -15,7 +15,12 @@
     "check:smoke-safety": "tsx scripts/check-smoke-safety.ts",
     "test:smoke": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile smoke",
     "test:api": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile api",
+    "test:checkout": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile api --tags \"@mutating\"",
     "sut:wait": "tsx scripts/wait-for-sut.ts",
+    "sut:up": "docker compose -f docker/docker-compose.yml up -d",
+    "sut:down": "docker compose -f docker/docker-compose.yml down",
+    "sut:migrate": "docker compose -f docker/docker-compose.yml run --rm api python3 manage.py migrate",
+    "sut:seed": "docker compose -f docker/docker-compose.yml run --rm api python3 manage.py populatedb --createsuperuser",
     "test": "npm run test:unit && npm run test:contract && npm run test:api",
     "verify": "npm run typecheck && npm run test:unit && npm run check:smoke-safety && npm run test:contract && npm run test:smoke && npm run test:api"
   },

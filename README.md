@@ -14,7 +14,7 @@ Fourteenth portfolio project (`P-12`) demonstrating enterprise-grade GraphQL aut
 
 1. **Screenplay Pattern with Serenity/JS:** Modular, user-centric actors (`Guest`, `Customer`, `Admin`) equipped with a typed `CallGraphQL` Ability that manages headers, JWT Bearer tokens, query variables, and typed error responses.
 2. **Contract Testing & Schema Diffing:** Baseline schema snapshot (`schema/saleor-3.23.graphql`) compared against live introspection via `@graphql-inspector/core`, preventing breaking changes in CI.
-3. **Stateful BDD Journeys:** Business-readable Cucumber Gherkin scenarios testing catalogue querying, pricing resolution, pagination, and JWT authentication lifecycle (`tokenCreate`, `tokenRefresh`).
+3. **Stateful BDD Journeys:** Business-readable Cucumber Gherkin scenarios testing catalogue querying, JWT authentication, and the six-operation checkout lifecycle through modern `transactionCreate` and `checkoutComplete`.
 4. **Read-Only Smoke Profile (NFR-6):** Demo-safe `@smoke and not @mutating` profile guaranteed to execute zero side-effect mutations, verified by automated safety tests.
 5. **Deterministic Docker SUT:** Self-contained Docker Compose stack with pinned digests (`saleor:3.23`, `postgres:15-alpine`, `valkey:8.1-alpine`), respecting host storage policies on `E:\_DockerData`.
 
@@ -39,6 +39,7 @@ saleor-graphql-automation/
 ├── features/                    # Canonical Gherkin feature files
 │   ├── catalogue_read.feature   # FR-1 catalogue read journey
 │   ├── authentication.feature   # FR-3 JWT auth lifecycle journey
+│   ├── checkout_stateful.feature # FR-2 stateful checkout journey
 │   └── step_definitions/        # Serenity/JS step definitions
 ├── schema/                      # Baseline GraphQL introspection schema
 │   └── saleor-3.23.graphql
@@ -66,17 +67,12 @@ saleor-graphql-automation/
 npm install
 ```
 
-### 2. Start Local SUT Environment
-```bash
-cd docker
-docker compose up -d
-npm run sut:wait
-```
-
-### 3. Run Verification Gate
+### 2. Run the Deterministic Gate
 ```bash
 npm run verify
 ```
+
+The gate starts the embedded SUT when no local Saleor endpoint is available. For the separate pinned-Docker acceptance procedure, including database migration and deterministic seeding, follow [docs/live-sut-validation.md](docs/live-sut-validation.md).
 
 ---
 
@@ -90,7 +86,10 @@ npm run verify
 | `npm run check:smoke-safety`| Asserts that no `@mutating` scenario is tagged with `@smoke` |
 | `npm run test:smoke` | Runs read-only smoke scenarios against local or demo instances |
 | `npm run test:api` | Runs full BDD GraphQL journey suite |
+| `npm run test:checkout` | Runs only the `@mutating` stateful checkout journey |
 | `npm run verify` | Complete verification gate: typecheck, unit, contract, smoke, and API tests |
+| `npm run sut:up` / `npm run sut:down` | Starts or stops the pinned Docker SUT without deleting its seeded volumes |
+| `npm run sut:migrate` / `npm run sut:seed` | Applies Saleor migrations and creates the deterministic sample dataset |
 
 ---
 
