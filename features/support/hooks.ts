@@ -10,11 +10,17 @@ let mockServerHandle: { url: string; close: () => Promise<void> } | undefined;
 
 BeforeAll({ timeout: 30000 }, async function () {
   const explicitTargetUrl = process.env.SALEOR_GRAPHQL_URL;
-  const targetUrl = explicitTargetUrl || 'http://localhost:8000/graphql/';
+
+  if (!explicitTargetUrl) {
+    mockServerHandle = await startMockServer(0);
+    process.env.SALEOR_GRAPHQL_URL = mockServerHandle.url;
+    console.log(`[Cucumber Hooks] Started local test SUT at ${mockServerHandle.url}`);
+    return;
+  }
 
   let liveOk = false;
   try {
-    const res = await fetch(targetUrl, {
+    const res = await fetch(explicitTargetUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query: '{ shop { name } }' }),
@@ -23,7 +29,7 @@ BeforeAll({ timeout: 30000 }, async function () {
       const json = (await res.json()) as { data?: { shop?: { name?: string } } };
       if (json?.data?.shop?.name) {
         liveOk = true;
-        console.log(`[Cucumber Hooks] Connected to live Saleor SUT at ${targetUrl}`);
+        console.log(`[Cucumber Hooks] Connected to live Saleor SUT at ${explicitTargetUrl}`);
       }
     }
   } catch {
@@ -31,12 +37,7 @@ BeforeAll({ timeout: 30000 }, async function () {
   }
 
   if (!liveOk) {
-    if (explicitTargetUrl) {
-      throw new Error(`Explicit Saleor SUT is unavailable or unhealthy: ${explicitTargetUrl}`);
-    }
-    mockServerHandle = await startMockServer(0);
-    process.env.SALEOR_GRAPHQL_URL = mockServerHandle.url;
-    console.log(`[Cucumber Hooks] Started local test SUT at ${mockServerHandle.url}`);
+    throw new Error(`Explicit Saleor SUT is unavailable or unhealthy: ${explicitTargetUrl}`);
   }
 });
 
