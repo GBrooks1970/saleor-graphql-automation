@@ -12,6 +12,8 @@
     "typecheck": "tsc --noEmit",
     "test:unit": "tsx --test tests/unit/**/*.spec.ts",
     "test:contract": "tsx --test tests/contract/**/*.spec.ts",
+    "check:schema": "tsx scripts/check-schema-contract.ts",
+    "check:schema:live": "tsx scripts/check-schema-contract.ts --live",
     "check:smoke-safety": "tsx scripts/check-smoke-safety.ts",
     "test:smoke": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile smoke",
     "test:api": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile api",

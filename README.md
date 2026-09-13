@@ -13,7 +13,7 @@ Fourteenth portfolio project (`P-12`) demonstrating enterprise-grade GraphQL aut
 ## Key Features
 
 1. **Screenplay Pattern with Serenity/JS:** Modular, user-centric actors (`Guest`, `Customer`, `Admin`) equipped with a typed `CallGraphQL` Ability that manages headers, JWT Bearer tokens, query variables, and typed error responses.
-2. **Contract Testing & Schema Diffing:** Baseline schema snapshot (`schema/saleor-3.23.graphql`) compared against live introspection via `@graphql-inspector/core`, preventing breaking changes in CI.
+2. **Contract Testing & Schema Diffing:** Baseline schema snapshot (`schema/saleor-3.23.graphql`) with bidirectional breaking-change diff testing via `@graphql-inspector/core`, plus truthful, fail-closed live introspection diffing (`npm run check:schema:live`) classified under ADR-010.
 3. **Stateful BDD Journeys:** Business-readable Cucumber Gherkin scenarios testing catalogue querying, JWT authentication, and the six-operation checkout lifecycle through modern `transactionCreate` and `checkoutComplete`.
 4. **Read-Only Smoke Profile (NFR-6):** Demo-safe `@smoke and not @mutating` profile guaranteed to execute zero side-effect mutations, verified by automated safety tests.
 5. **Deterministic Docker SUT:** Self-contained Docker Compose stack with pinned digests (`saleor:3.23`, `postgres:15-alpine`, `valkey:8.1-alpine`), respecting host storage policies on `E:\_DockerData`.
@@ -83,6 +83,8 @@ The gate always starts the embedded SUT unless `SALEOR_GRAPHQL_URL` is explicitl
 | `npm run typecheck` | Validates TypeScript types across the project |
 | `npm run test:unit` | Executes unit tests for abilities, error parsers, and safety guards |
 | `npm run test:contract` | Executes bidirectional schema diff contract tests |
+| `npm run check:schema` | Validates baseline schema snapshot self-consistency offline |
+| `npm run check:schema:live` | Diffs live Saleor introspection schema against baseline, failing closed on unreachable endpoints or domain breaks (ADR-010) |
 | `npm run check:smoke-safety`| Asserts that no `@mutating` scenario is tagged with `@smoke` |
 | `npm run test:smoke` | Runs read-only smoke scenarios against local or demo instances |
 | `npm run test:api` | Runs full BDD GraphQL journey suite |

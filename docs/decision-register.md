@@ -73,3 +73,16 @@ This register documents key architectural decisions (ADRs) governing the `saleor
 - **Context:** CI needs a fast, deterministic checkout path, but an embedded mock alone cannot prove that mutation documents and workflow assumptions still match Saleor 3.23. Silent fallback from an explicitly configured live endpoint could mislabel mock evidence as live evidence.
 - **Decision:** Keep the embedded stateful SUT in `npm run verify`, validate every checkout document against the pinned schema, and require a separately identified live Docker run for SGR-P2-01 acceptance. If `SALEOR_GRAPHQL_URL` is explicitly supplied but unhealthy, the Cucumber hook fails closed.
 - **Consequences:** CI remains fast while live compatibility claims stay evidence-based. Operators must bootstrap the pinned SUT and provide Admin credentials before recording live acceptance.
+
+---
+
+## ADR-010: Classification and Handling of Built-in GraphQL Directive Differences in Schema Contract Diffing
+- **Status:** Accepted (2026-09-13)
+- **Context:** `scripts/check-schema-contract.ts` diffs target schemas against the baseline snapshot `schema/saleor-3.23.graphql` via `@graphql-inspector/core`. Client-side `graphql-js`'s `buildSchema` automatically introduces modern specification directives (`@specifiedBy`, `@oneOf`, and extended `@deprecated` locations), whereas Saleor 3.23's Python backend (`graphql-core`) exposes earlier standard directives (`@include`, `@skip`, and `@deprecated` on `FIELD_DEFINITION | ENUM_VALUE`). Inspector reports missing directives as breaking changes, causing 5 false breaking differences against the pinned Saleor SUT. Furthermore, an unreachable endpoint previously fell back silently to offline self-comparison, presenting a false-green result.
+- **Decision:**
+  1. **Fail-Closed Live Evaluation:** When live comparison is explicitly requested (`--live`, `--endpoint`, or `SALEOR_GRAPHQL_URL`), failure to reach or parse the target schema fails closed with non-zero exit (code 1), eliminating false greens.
+  2. **Specification Directive Classification:** Differentiate built-in GraphQL specification directive variance from domain contract breaks. Removals or location changes on built-in directives (`specifiedBy`, `oneOf`, `deprecated`, `include`, `skip`) are classified as `directiveSpecDifferences` and reported for audit transparency.
+  3. **Strict Domain Directive Protection:** Application/domain directives (`@doc`, `@webhookEventsInfo`, etc.) and all domain types, fields, arguments, inputs, and enums remain strictly enforced as `domainBreaking` changes if removed or incompatibly altered.
+  4. **Dedicated Live Command:** Introduce `npm run check:schema:live` distinct from the offline, deterministic PR verification gate (`npm run verify` / `npm run test:contract`).
+- **Consequences:** Eliminates false-positive breaking failures when validating the pinned Saleor SUT while preventing real domain schema regressions. Prohibits silent fallback, ensuring truthful contract verification in CI/CD and drift detection workflows.
+
