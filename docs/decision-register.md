@@ -31,7 +31,7 @@ This register documents key architectural decisions (ADRs) governing the `saleor
 ## ADR-004: Pinned SUT Container Stack on `E:\_DockerData`
 - **Status:** Accepted (2026-09-02)
 - **Context:** Saleor 3.23 requires PostgreSQL 15 and Redis/Valkey. Docker resources must respect host machine storage rules.
-- **Decision:** Pin exact image digests (`saleor:3.23@sha256:...`, `postgres:15-alpine@sha256:...`, `valkey/valkey:8.1-alpine`) and configure Docker WSL2 volumes exclusively on `E:\_DockerData` per `AGENTS.md`.
+- **Decision:** Pin exact image digests (`saleor:3.23@sha256:ff3f5f5ebb...`, `postgres:15-alpine@sha256:fe0737ba56...`, `valkey/valkey:8.1-alpine@sha256:77643d1525...`) and configure Docker WSL2 volumes exclusively on `E:\_DockerData` per `AGENTS.md`.
 - **Consequences:** 100% deterministic test execution across local workstations and CI runners with zero storage leakage to the `C:` drive.
 
 ---
