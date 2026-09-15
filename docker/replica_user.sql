@@ -1,4 +1,9 @@
--- Create read-only role for direct DB assertions if required
+-- ==============================================================================
+-- DEVELOPMENT & TEST FIXTURE ONLY:
+-- Read-only role provisioned for local database assertions if required.
+-- Do not deploy this script or role password to staging or production databases.
+-- ==============================================================================
+
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'saleor_read') THEN
