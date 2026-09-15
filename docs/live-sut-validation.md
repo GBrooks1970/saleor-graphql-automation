@@ -49,3 +49,30 @@ npm run test:checkout
 ```
 
 An explicitly configured but unhealthy endpoint fails the run; it never falls back to the embedded SUT. Record the returned order number, order status, payment status and charge status in the implementation evidence.
+
+## Pinned SUT Image Manifest & Refresh Policy
+
+All container services in `docker/docker-compose.yml` are strictly pinned to immutable sha256 digests to guarantee reproducibility across workstations and CI runners.
+
+### Image Manifest
+
+| Service | Repository | Tag | sha256 Digest | Role |
+|---|---|---|---|---|
+| `api` | `ghcr.io/saleor/saleor` | `3.23` | `sha256:ff3f5f5ebb0f40c36c8fa4cdd647be33f9db2762afc889d6c27704fc61813141` | Django Core GraphQL API |
+| `worker` | `ghcr.io/saleor/saleor` | `3.23` | `sha256:ff3f5f5ebb0f40c36c8fa4cdd647be33f9db2762afc889d6c27704fc61813141` | Celery background task worker |
+| `db` | `postgres` | `15-alpine` | `sha256:fe0737ba566a2c5b2a28f34433c0a423261900ec17b9bf7ad115e1aae7e57f1b` | Relational PostgreSQL data store |
+| `cache` | `valkey/valkey` | `8.1-alpine` | `sha256:77643d152547b446fc15cbafaff22004545663fcd40c6b28038ad283837baa75` | Redis/Valkey cache & Celery broker |
+
+### Image Refresh & Maintenance Procedure
+
+When refreshing or upgrading container dependencies:
+1. **Verify Storage Location:** Ensure Docker Desktop WSL2 data disk is located on `E:\_DockerData` (never `C:`).
+2. **Inspect New Image Digest:** Pull the desired target tag and extract its exact immutable repo digest:
+   ```powershell
+   docker pull valkey/valkey:8.1-alpine
+   docker image inspect valkey/valkey:8.1-alpine --format "{{json .RepoDigests}}"
+   ```
+3. **Update Compose Definition:** Update `docker/docker-compose.yml` with the full `image: <repository>:<tag>@sha256:<digest>` specification.
+4. **Validate Configuration:** Run `docker compose -f docker/docker-compose.yml config` to ensure the YAML parses cleanly and prints the pinned digest.
+5. **Run Verification:** Execute warm start (`npm run sut:up && npm run sut:wait`), run live checkout (`npm run test:checkout`), and diff the schema (`npm run check:schema:live`).
+6. **Synchronise Documentation:** Update the image manifest in this document, `docs/decision-register.md` (ADR-004), and `README.md`.

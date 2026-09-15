@@ -16,7 +16,7 @@ Fourteenth portfolio project (`P-12`) demonstrating enterprise-grade GraphQL aut
 2. **Contract Testing & Schema Diffing:** Baseline schema snapshot (`schema/saleor-3.23.graphql`) with bidirectional breaking-change diff testing via `@graphql-inspector/core`, plus truthful, fail-closed live introspection diffing (`npm run check:schema:live`) classified under ADR-010.
 3. **Stateful BDD Journeys:** Business-readable Cucumber Gherkin scenarios testing catalogue querying, JWT authentication, and the six-operation checkout lifecycle through modern `transactionCreate` and `checkoutComplete`.
 4. **Read-Only Smoke Profile (NFR-6):** Demo-safe `@smoke and not @mutating` profile guaranteed to execute zero side-effect mutations, verified by automated safety tests.
-5. **Deterministic Docker SUT:** Self-contained Docker Compose stack with pinned digests (`saleor:3.23`, `postgres:15-alpine`, `valkey:8.1-alpine`), respecting host storage policies on `E:\_DockerData`.
+5. **Deterministic Docker SUT:** Self-contained Docker Compose stack with pinned immutable digests (`saleor:3.23@sha256:ff3f5f5ebb...`, `postgres:15-alpine@sha256:fe0737ba56...`, `valkey:8.1-alpine@sha256:77643d1525...`), respecting host storage policies on `E:\_DockerData`.
 
 ---
 
