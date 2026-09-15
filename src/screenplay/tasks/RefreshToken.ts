@@ -1,5 +1,6 @@
 import { Task } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
+import { requireTransportSuccess } from '../errors/index.js';
 import { TokenRefreshPayload } from '../questions/TheToken.js';
 
 const TOKEN_REFRESH_MUTATION = `
@@ -30,9 +31,13 @@ export class RefreshToken extends Task {
       refreshToken: this.refreshToken,
     });
 
+    requireTransportSuccess('TokenRefresh', response);
+
     const token = response.data?.tokenRefresh?.token;
     if (token) {
       ability.setAuthToken(token);
+    } else {
+      ability.clearAuthToken();
     }
   }
 }

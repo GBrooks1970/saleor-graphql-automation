@@ -1,5 +1,6 @@
 import { Task } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
+import { requireTransportSuccess } from '../errors/index.js';
 import { TokenCreatePayload } from '../questions/TheToken.js';
 
 const TOKEN_CREATE_MUTATION = `
@@ -36,10 +37,14 @@ export class Authenticate extends Task {
 
   async performAs(actor: any): Promise<void> {
     const ability = CallGraphQL.as(actor);
+    ability.clearAuthToken();
+
     const response = await ability.execute<{ tokenCreate: TokenCreatePayload }>(TOKEN_CREATE_MUTATION, {
       email: this.email,
       password: this.password,
     });
+
+    requireTransportSuccess('TokenCreate', response);
 
     const token = response.data?.tokenCreate?.token;
     if (token) {

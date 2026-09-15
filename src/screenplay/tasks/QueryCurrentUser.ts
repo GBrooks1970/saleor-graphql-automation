@@ -1,5 +1,6 @@
 import { Task } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
+import { requireOperationPayload } from '../errors/index.js';
 import { UserSummary } from '../questions/TheToken.js';
 
 const ME_QUERY = `
@@ -22,6 +23,8 @@ export class QueryCurrentUser extends Task {
   }
 
   async performAs(actor: any): Promise<void> {
-    await CallGraphQL.as(actor).execute<{ me: UserSummary }>(ME_QUERY);
+    const ability = CallGraphQL.as(actor);
+    const response = await ability.execute<{ me: UserSummary }>(ME_QUERY);
+    requireOperationPayload('GetCurrentUser', response, response.data?.me);
   }
 }
