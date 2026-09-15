@@ -76,3 +76,24 @@ When refreshing or upgrading container dependencies:
 4. **Validate Configuration:** Run `docker compose -f docker/docker-compose.yml config` to ensure the YAML parses cleanly and prints the pinned digest.
 5. **Run Verification:** Execute warm start (`npm run sut:up && npm run sut:wait`), run live checkout (`npm run test:checkout`), and diff the schema (`npm run check:schema:live`).
 6. **Synchronise Documentation:** Update the image manifest in this document, `docs/decision-register.md` (ADR-004), and `README.md`.
+
+## Local Service Exposure & Fixture-Secret Scope
+
+### Loopback-Only Interface Binding (R-04)
+
+All published ports in `docker/docker-compose.yml` are bound exclusively to the host loopback interface (`127.0.0.1`):
+- **Saleor Core API:** `127.0.0.1:8000:8000` (GraphQL endpoint reachable only from `localhost` / `127.0.0.1`)
+- **PostgreSQL Database:** `127.0.0.1:5432:5432` (Direct database assertions or developer GUI inspection from host)
+- **Valkey Cache & Broker:** `127.0.0.1:6379:6379` (Local cache inspection)
+
+This strictly isolates development services from public network interfaces (`0.0.0.0`), preventing unauthorized inbound access across local area networks (LAN) or virtual interfaces.
+
+### Fixture-Secret Scoping & Non-Production Boundaries
+
+All credentials, tokens, and encryption keys in this repository:
+- `admin@example.com` / `admin` (Saleor Superuser fixture)
+- `saleor` / `saleor` (PostgreSQL primary fixture)
+- `saleor_read` / `saleor_read` (PostgreSQL assertion fixture)
+- `SECRET_KEY=secret_saleor_graphql_automation_key_323_ci` (Django secret key fixture)
+
+are **ephemeral, non-production test fixtures** scoped strictly to local Docker Compose stacks, embedded mocks, and CI workflows. They **MUST NEVER** be deployed to, copied into, or used within staging, pre-production, or production environments.
