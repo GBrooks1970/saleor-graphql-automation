@@ -1,5 +1,7 @@
 import { Task } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
+import { requireOperationPayload } from '../errors/index.js';
+import { ShopData } from '../questions/TheShopInfo.js';
 
 const SHOP_QUERY = `
   query GetShopInfo {
@@ -23,6 +25,8 @@ export class QueryShopInfo extends Task {
   }
 
   async performAs(actor: any): Promise<void> {
-    await CallGraphQL.as(actor).execute(SHOP_QUERY);
+    const ability = CallGraphQL.as(actor);
+    const response = await ability.execute<{ shop: ShopData }>(SHOP_QUERY);
+    requireOperationPayload('GetShopInfo', response, response.data?.shop);
   }
 }

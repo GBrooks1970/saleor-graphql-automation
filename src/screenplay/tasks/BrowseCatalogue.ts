@@ -1,5 +1,7 @@
 import { Task } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
+import { requireOperationPayload } from '../errors/index.js';
+import { ProductConnection } from '../questions/TheProducts.js';
 
 const PRODUCTS_QUERY = `
   query GetProducts($first: Int, $channel: String!, $after: String) {
@@ -50,10 +52,13 @@ export class BrowseCatalogue extends Task {
   }
 
   async performAs(actor: any): Promise<void> {
-    await CallGraphQL.as(actor).execute(PRODUCTS_QUERY, {
+    const ability = CallGraphQL.as(actor);
+    const response = await ability.execute<{ products: ProductConnection }>(PRODUCTS_QUERY, {
       channel: this.channel,
       first: this.first,
       after: this.after,
     });
+
+    requireOperationPayload('GetProducts', response, response.data?.products);
   }
 }

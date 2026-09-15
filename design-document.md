@@ -33,12 +33,12 @@ This repository delivers the fourteenth portfolio project (`P-12`), establishing
   - Offline baseline schema (`schema/saleor-3.23.graphql`) validated offline and compared against active runtime schema via `check:schema:live`. Diff gate detects breaking changes with fail-closed probing and ADR-010 specification directive classification.
 - **FR-5: Staff Order Fulfilment & Lifecycle Transitions [Target Roadmap — Backlog SGR-P2-02]**
   - Staff user transitions confirmed orders: capture payment, allocate stock, generate fulfilment lines, and transition order to `FULFILLED`.
-- **FR-6: Fault Tolerance & Typed Error Handling [Delivered Baseline — Unified Model in SGR-P2-03]**
-  - Queries/mutations validate typed GraphQL errors (`AccountError`, `CheckoutError`, `OrderError`) and assert code/field-level diagnostic accuracy. Comprehensive unified typed error handling across all tasks is scheduled under SGR-P2-03.
+- **FR-6: Fault Tolerance & Typed Error Handling [Delivered — SGR-P2-03]**
+  - Queries/mutations validate typed GraphQL errors (`AccountError`, `CheckoutError`, `OrderError`) and assert code/field-level diagnostic accuracy. Comprehensive unified typed error handling across all tasks implemented via `GraphQLOperationError` hierarchy and `requireOperationPayload` / `requireTransportSuccess`.
 
 ### Non-Functional Requirements (NFR)
-- **NFR-1: Latency Tracking & SLA Telemetry [Delivered Baseline — Threshold Alerting in SGR-P2-03]:** Each GraphQL operation records execution latency in `CallGraphQL`. Active SLA threshold assertions (alerting if operation latency exceeds 2,000ms) are scheduled under backlog SGR-P2-03.
-- **NFR-2: Error Categorisation & Assertions [Delivered Baseline — Unified Model in SGR-P2-03]:** Framework differentiates between HTTP-level transport errors, top-level GraphQL syntax/validation errors, and domain-level mutation errors.
+- **NFR-1: Latency Tracking & SLA Telemetry [Delivered — SGR-P2-03]:** Each GraphQL operation records execution latency in `CallGraphQL`. Active SLA threshold assertions (`assertLatencyWithin`, `LastOperationLatency`, configurable max latency default 2,000ms via `SALEOR_GRAPHQL_MAX_LATENCY_MS`) are fully enforced.
+- **NFR-2: Error Categorisation & Assertions [Delivered — SGR-P2-03]:** Framework differentiates between HTTP-level transport errors, timeout aborts (`AbortSignal.timeout`), invalid JSON payloads, top-level GraphQL syntax/validation errors, and domain-level mutation errors via a unified typed error hierarchy (`GraphQLTimeoutError`, `GraphQLNetworkError`, `GraphQLHttpError`, `GraphQLInvalidJsonError`, `GraphQLSyntaxError`, `GraphQLDomainError`).
 - **NFR-3: Test Independence & Data Isolation [Delivered]:** Scenarios manage their own state; UUID generation and scenario-scoped Serenity notes ensure isolation without cross-test state leakage.
 - **NFR-4: Docker SUT Determinism & Operational Readiness [Delivered]:**
   - **NFR-4a: Warm Service Readiness:** Docker container stack returns healthy GraphQL probe within 30 seconds (empirically measured: ~14.6 seconds via `npm run sut:wait`).
