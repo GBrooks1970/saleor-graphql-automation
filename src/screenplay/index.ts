@@ -7,6 +7,7 @@ export * from './questions/TheToken.js';
 export * from './questions/TheGraphQLError.js';
 export * from './questions/TheCheckout.js';
 export * from './questions/TheOrder.js';
+export * from './questions/TheFulfillment.js';
 export * from './questions/LastOperationLatency.js';
 export * from './tasks/QueryShopInfo.js';
 export * from './tasks/BrowseCatalogue.js';
@@ -20,3 +21,7 @@ export * from './tasks/SetCheckoutBillingAddress.js';
 export * from './tasks/SelectCheckoutDeliveryMethod.js';
 export * from './tasks/RecordCheckoutTransaction.js';
 export * from './tasks/CompleteCheckout.js';
+export * from './tasks/LocateOrder.js';
+export * from './tasks/FulfillOrder.js';
+export * from './checkout/CheckoutNotes.js';
+

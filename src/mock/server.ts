@@ -7,6 +7,7 @@ const MOCK_SCHEMA_SDL = `
     shop: Shop!
     products(first: Int, channel: String!, after: String): ProductCountableConnection!
     me: User
+    order(id: ID!): Order
   }
 
   type Mutation {
@@ -26,6 +27,7 @@ const MOCK_SCHEMA_SDL = `
     checkoutDeliveryMethodUpdate(id: ID!, deliveryMethodId: ID!): CheckoutDeliveryMethodUpdate!
     transactionCreate(id: ID!, transaction: TransactionCreateInput!): TransactionCreate!
     checkoutComplete(id: ID!): CheckoutComplete!
+    orderFulfill(order: ID, input: OrderFulfillInput!): OrderFulfill!
   }
 
   input CheckoutCreateInput {
@@ -114,6 +116,7 @@ const MOCK_SCHEMA_SDL = `
     name: String!
     quantityAvailable: Int
     pricing: VariantPricingInfo
+    stocks: [Stock!]
   }
 
   type ProductPricingInfo {
@@ -184,13 +187,80 @@ const MOCK_SCHEMA_SDL = `
     chargedAmount: Money!
   }
 
+  type Warehouse {
+    id: ID!
+    name: String!
+  }
+
+  type Stock {
+    id: ID!
+    quantity: Int!
+    quantityAllocated: Int!
+    warehouse: Warehouse!
+  }
+
+  type OrderLine {
+    id: ID!
+    productName: String!
+    variantName: String!
+    quantity: Int!
+    quantityFulfilled: Int!
+    variant: ProductVariant
+  }
+
+  type FulfillmentLine {
+    id: ID!
+    quantity: Int!
+    orderLine: OrderLine
+  }
+
+  type Fulfillment {
+    id: ID!
+    status: String!
+    trackingNumber: String
+    lines: [FulfillmentLine!]
+  }
+
   type Order {
     id: ID!
     number: String!
     status: String!
     paymentStatus: String!
     chargeStatus: String!
+    isPaid: Boolean!
     total: TaxedMoney!
+    lines: [OrderLine!]!
+    fulfillments: [Fulfillment!]!
+  }
+
+  type OrderError {
+    field: String
+    message: String!
+    code: String
+    warehouse: ID
+    orderLines: [ID!]
+  }
+
+  input OrderFulfillInput {
+    lines: [OrderFulfillLineInput!]!
+    notifyCustomer: Boolean
+    allowStockToBeExceeded: Boolean = false
+    trackingNumber: String
+  }
+
+  input OrderFulfillLineInput {
+    orderLineId: ID
+    stocks: [OrderFulfillStockInput!]!
+  }
+
+  input OrderFulfillStockInput {
+    quantity: Int!
+    warehouse: ID!
+  }
+
+  type OrderFulfill {
+    order: Order
+    errors: [OrderError!]!
   }
 
   type AccountError {
@@ -297,8 +367,62 @@ interface MockCheckout {
   };
 }
 
+interface MockWarehouse {
+  id: string;
+  name: string;
+}
+
+interface MockStock {
+  id: string;
+  quantity: number;
+  quantityAllocated: number;
+  warehouse: MockWarehouse;
+}
+
+interface MockVariant {
+  id: string;
+  name: string;
+  quantityAvailable: number;
+  pricing: { price: ReturnType<typeof taxedMoney> };
+  stocks: MockStock[];
+}
+
+interface MockOrderLine {
+  id: string;
+  productName: string;
+  variantName: string;
+  quantity: number;
+  quantityFulfilled: number;
+  variant: MockVariant;
+}
+
+interface MockFulfillmentLine {
+  id: string;
+  quantity: number;
+  orderLine?: MockOrderLine;
+}
+
+interface MockFulfillment {
+  id: string;
+  status: string;
+  lines: MockFulfillmentLine[];
+}
+
+interface MockOrder {
+  id: string;
+  number: string;
+  status: string;
+  paymentStatus: string;
+  chargeStatus: string;
+  isPaid: boolean;
+  total: ReturnType<typeof taxedMoney>;
+  lines: MockOrderLine[];
+  fulfillments: MockFulfillment[];
+}
+
 interface MockState {
   checkouts: Map<string, MockCheckout>;
+  orders: Map<string, MockOrder>;
   nextOrderNumber: number;
 }
 
@@ -313,6 +437,11 @@ const taxedMoney = (amount: number, currency: string = 'USD') => ({
   net: money(amount, currency),
 });
 
+const DEFAULT_WAREHOUSE: MockWarehouse = {
+  id: 'V2FyZWhvdXNlOjQwOGFmNzU2LTBhMGYtNDc0OS05NjhjLWQyY2I1YWQyZTA1ZA==',
+  name: 'Default Warehouse',
+};
+
 const MOCK_SHIPPING_METHODS: MockShippingMethod[] = [
   { id: 'U2hpcHBpbmdNZXRob2Q6Mw==', name: 'UPS', price: money(27.19) },
 ];
@@ -322,6 +451,14 @@ const variant = (id: string, name: string, amount: number) => ({
   name,
   quantityAvailable: 100,
   pricing: { price: taxedMoney(amount) },
+  stocks: [
+    {
+      id: 'U3RvY2s6NDU5',
+      quantity: 205,
+      quantityAllocated: 0,
+      warehouse: DEFAULT_WAREHOUSE,
+    },
+  ],
 });
 
 const MOCK_PRODUCTS = [
@@ -434,6 +571,8 @@ export function createRootValue(context: MockRequestContext) {
     },
 
     me: () => context.authUser || null,
+
+    order: ({ id }: { id: string }) => context.state.orders.get(id) || null,
 
     tokenCreate: ({ email, password }: { email: string; password: string }) => {
       if (email === 'customer@example.com' && password === 'validPass123') {
@@ -623,15 +762,98 @@ export function createRootValue(context: MockRequestContext) {
       }
 
       const orderNumber = String(context.state.nextOrderNumber++);
-      const order = {
+      const order: MockOrder = {
         id: `T3JkZXI6${randomUUID()}`,
         number: orderNumber,
         status: 'UNFULFILLED',
         paymentStatus: 'FULLY_CHARGED',
         chargeStatus: 'FULL',
+        isPaid: true,
         total: checkout.totalPrice,
+        lines: [
+          {
+            id: `T3JkZXJMaW5lOj${randomUUID()}`,
+            productName: 'Apple Juice',
+            variantName: '500 ml',
+            quantity: checkout.quantity,
+            quantityFulfilled: 0,
+            variant: {
+              id: 'UHJvZHVjdFZhcmlhbnQ6Mzg0',
+              name: '500 ml',
+              quantityAvailable: 100,
+              pricing: { price: taxedMoney(1.99) },
+              stocks: [
+                {
+                  id: 'U3RvY2s6NDU5',
+                  quantity: 205,
+                  quantityAllocated: 0,
+                  warehouse: DEFAULT_WAREHOUSE,
+                },
+              ],
+            },
+          },
+        ],
+        fulfillments: [],
       };
+      context.state.orders.set(order.id, order);
       return { order, confirmationNeeded: false, errors: [] };
+    },
+
+    orderFulfill: ({
+      order: orderId,
+      input,
+    }: {
+      order?: string;
+      input: {
+        lines: Array<{ orderLineId?: string; stocks: Array<{ warehouse: string; quantity: number }> }>;
+      };
+    }) => {
+      if (!context.authUser?.isStaff) {
+        return {
+          order: null,
+          errors: [checkoutError(null, 'Staff authentication is required', 'REQUIRED')],
+        };
+      }
+      if (!orderId) {
+        return {
+          order: null,
+          errors: [checkoutError('order', 'Order ID is required', 'REQUIRED')],
+        };
+      }
+      const order = context.state.orders.get(orderId);
+      if (!order) {
+        return {
+          order: null,
+          errors: [checkoutError('order', 'Order was not found', 'NOT_FOUND')],
+        };
+      }
+
+      const fulfillmentLines = input.lines.map((reqLine) => {
+        const matchingLine = order.lines.find((l) => l.id === reqLine.orderLineId);
+        const fulfilledQty = reqLine.stocks.reduce((acc, s) => acc + s.quantity, 0);
+        if (matchingLine) {
+          matchingLine.quantityFulfilled = Math.min(matchingLine.quantity, matchingLine.quantityFulfilled + fulfilledQty);
+        }
+        return {
+          id: `RnVsZmlsbG1lbnRMaW5lOj${randomUUID()}`,
+          quantity: fulfilledQty,
+          orderLine: matchingLine,
+        };
+      });
+
+      const fulfillment: MockFulfillment = {
+        id: `RnVsZmlsbG1lbnQ6${randomUUID()}`,
+        status: 'FULFILLED',
+        lines: fulfillmentLines,
+      };
+
+      order.fulfillments.push(fulfillment);
+      const allFulfilled = order.lines.every((l) => l.quantityFulfilled >= l.quantity);
+      if (allFulfilled) {
+        order.status = 'FULFILLED';
+      }
+
+      return { order, errors: [] };
     },
   };
 }
@@ -640,6 +862,7 @@ export function startMockServer(port: number = 0): Promise<{ url: string; close:
   return new Promise((resolve) => {
     const state: MockState = {
       checkouts: new Map(),
+      orders: new Map(),
       nextOrderNumber: 21,
     };
 

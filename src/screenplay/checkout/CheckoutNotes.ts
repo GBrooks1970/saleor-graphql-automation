@@ -36,11 +36,56 @@ export interface CheckoutOrder {
   total: MoneyAmount;
 }
 
+export interface OrderStockInfo {
+  id: string;
+  quantity: number;
+  quantityAllocated: number;
+  warehouse: {
+    id: string;
+    name: string;
+  };
+}
+
+export interface OrderLineDetail {
+  id: string;
+  productName: string;
+  variantName: string;
+  quantity: number;
+  quantityFulfilled: number;
+  variant?: {
+    id: string;
+    stocks?: OrderStockInfo[];
+  } | null;
+}
+
+export interface FulfillmentLineRecord {
+  id: string;
+  quantity: number;
+  orderLine?: {
+    id: string;
+    productName: string;
+  } | null;
+}
+
+export interface FulfillmentRecord {
+  id: string;
+  status: string;
+  lines?: FulfillmentLineRecord[];
+}
+
+export interface OrderDetail extends CheckoutOrder {
+  isPaid: boolean;
+  lines: OrderLineDetail[];
+  fulfillments: FulfillmentRecord[];
+}
+
 export interface CheckoutNotes {
   variant?: CheckoutVariant;
   checkout?: CheckoutState;
   transaction?: CheckoutTransaction;
   order?: CheckoutOrder;
+  orderDetail?: OrderDetail;
+  fulfillment?: FulfillmentRecord;
 }
 
 export interface CheckoutAddressInput {
