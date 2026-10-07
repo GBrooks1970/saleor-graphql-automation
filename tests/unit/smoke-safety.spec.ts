@@ -288,7 +288,7 @@ describe('Smoke Safety Policy Guard (NFR-6 & TRIAGE-01)', () => {
     it('validates that current workspace feature files have zero smoke-safety violations', () => {
       const result = validateSmokeSafety();
       assert.strictEqual(result.violations.length, 0, 'No violations permitted in active feature files');
-      assert.strictEqual(result.totalScenarios, 8, 'Expected 8 scenarios across active feature files');
+      assert.strictEqual(result.totalScenarios, 9, 'Expected 9 scenarios across active feature files');
       assert.strictEqual(result.smokeScenarios, 3, 'Expected 3 @smoke scenarios across active feature files');
     });
   });

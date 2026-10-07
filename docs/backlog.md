@@ -1,7 +1,7 @@
 # Canonical Project Backlog: saleor-graphql-automation
 
-**Current Version:** v3
-**Last Updated:** 2026-09-10
+**Current Version:** v4
+**Last Updated:** 2026-10-07
 **Project:** Fourteenth Portfolio Project (P-12) — Saleor GraphQL Automation  
 **Repository:** `GBrooks1970/saleor-graphql-automation`  
 
@@ -21,8 +21,8 @@
 | **SGR-P1-07** | NFR-6: Demo-Safe Read-Only Smoke Profile | 1 | QUALITY | Done | MEDIUM | 18 |
 | **SGR-P1-08** | GitHub Actions CI & `npm run verify` Gate | 1 | CI/CD | Done | HIGH | 20 |
 | **SGR-P2-01** | FR-2: Stateful Checkout BDD Journey | 2 | FEATURE | Done | HIGH | 19 |
-| **SGR-P2-02** | FR-5: Staff Order Fulfilment Journey | 2 | FEATURE | Backlog | MEDIUM | 16 |
-| **SGR-P2-03** | NFR-1 & NFR-2: Latency Telemetry & Error Model | 2 | QUALITY | Backlog | MEDIUM | 15 |
+| **SGR-P2-02** | FR-5: Staff Order Fulfilment Journey | 2 | FEATURE | Done | MEDIUM | 16 |
+| **SGR-P2-03** | NFR-1 & NFR-2: Latency Telemetry & Error Model | 2 | QUALITY | Done | MEDIUM | 15 |
 | **SGR-P3-01** | Living Documentation & GitHub Pages | 3 | SHOWCASE | Backlog | LOW | 12 |
 | **SGR-P3-02** | Upstream Schema Drift & Alerting Monitor | 3 | RELIABILITY | Backlog | LOW | 11 |
 
@@ -73,3 +73,25 @@
   6. A separate run against an explicitly configured, pinned Saleor Docker SUT produces a fully charged order; explicit live endpoints must fail closed rather than silently use the mock.
 - **Evidence boundary:** `npm run verify` is the deterministic CI gate. Live acceptance additionally follows `docs/live-sut-validation.md` and records the returned order number and statuses.
 - **Completion evidence:** `docs/implementation-logs/2026-09-08_sgr-p2-01-stateful-checkout.md` records the implementation and deterministic evidence; `docs/implementation-logs/2026-09-10_sgr-p2-01-live-acceptance-closure.md` records the pinned live-SUT acceptance and closure evidence.
+
+### SGR-P2-02: FR-5 Staff Order Fulfilment Journey
+- **Goal:** Implement the staff order fulfilment journey (`features/order_fulfilment.feature`) where an authenticated staff actor locates a confirmed order, verifies unfulfilled lines, allocates warehouse stock, and issues `orderFulfill` transitioning status to `FULFILLED`.
+- **Acceptance criteria:**
+  1. The scenario is tagged `@api @mutating` and remains excluded from the smoke lane.
+  2. A staff actor locates an isolated confirmed order and inspects line and stock details.
+  3. The staff actor allocates stock and executes `orderFulfill` mutation, resulting in status `FULFILLED` and verified fulfillment records.
+  4. Screenplay Questions and Tasks are strongly typed (`OrderDetail`, `OrderLineDetail`, `FulfillmentRecord`), eliminating `any`.
+  5. Deterministic embedded SUT supports order lookup and fulfillment mutation with warehouse allocation checks.
+  6. Unit tests (`tests/unit/mock-fulfilment.spec.ts`) validate mock behavior and permissions.
+  7. Deterministic verification gate (`npm run verify`) passes 100%.
+- **Completion evidence:** `docs/implementation-logs/2026-10-07_sgr-p2-02-staff-order-fulfilment.md` records implementation and test evidence.
+
+### SGR-P2-03: NFR-1 & NFR-2 Latency Telemetry & Error Model
+- **Goal:** Add bounded GraphQL requests, latency enforcement, and typed error models across Screenplay Tasks.
+- **Acceptance criteria:**
+  1. Tests cover timeout, HTTP, invalid JSON, GraphQL, and domain failures.
+  2. Authentication state is cleared before credential rotation.
+  3. Latency thresholds are configurable.
+  4. Deterministic verification gate (`npm run verify`) passes in full.
+- **Completion evidence:** Delivered in PR #10 (`d3ce465`).
+

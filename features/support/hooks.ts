@@ -60,4 +60,8 @@ Before(function () {
     CallGraphQL.using(endpoint),
     TakeNotes.using(sharedCheckoutNotes)
   );
+  actorCalled('Staff').whoCan(
+    CallGraphQL.using(endpoint),
+    TakeNotes.using(sharedCheckoutNotes)
+  );
 });

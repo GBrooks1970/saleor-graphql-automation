@@ -175,6 +175,95 @@ export const COMPLETE_CHECKOUT_MUTATION = `
   }
 `;
 
+export const GET_ORDER_DETAILS_QUERY = `
+  query GetOrderDetails($id: ID!) {
+    order(id: $id) {
+      id
+      number
+      status
+      paymentStatus
+      chargeStatus
+      isPaid
+      total {
+        gross {
+          amount
+          currency
+        }
+      }
+      lines {
+        id
+        productName
+        variantName
+        quantity
+        quantityFulfilled
+        variant {
+          id
+          stocks {
+            id
+            quantity
+            quantityAllocated
+            warehouse {
+              id
+              name
+            }
+          }
+        }
+      }
+      fulfillments {
+        id
+        status
+        lines {
+          id
+          quantity
+          orderLine {
+            id
+            productName
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FULFILL_ORDER_MUTATION = `
+  mutation FulfillOrder($order: ID!, $input: OrderFulfillInput!) {
+    orderFulfill(order: $order, input: $input) {
+      order {
+        id
+        number
+        status
+        paymentStatus
+        chargeStatus
+        isPaid
+        fulfillments {
+          id
+          status
+          lines {
+            id
+            quantity
+            orderLine {
+              id
+              productName
+            }
+          }
+        }
+        lines {
+          id
+          quantity
+          quantityFulfilled
+        }
+      }
+      errors {
+        field
+        message
+        code
+        warehouse
+        orderLines
+      }
+    }
+  }
+`;
+
 export const CHECKOUT_OPERATIONS = [
   ['SelectCheckoutVariant', SELECT_CHECKOUT_VARIANT_QUERY],
   ['CreateCheckout', CREATE_CHECKOUT_MUTATION],
@@ -183,4 +272,7 @@ export const CHECKOUT_OPERATIONS = [
   ['UpdateCheckoutDeliveryMethod', UPDATE_CHECKOUT_DELIVERY_METHOD_MUTATION],
   ['CreateCheckoutTransaction', CREATE_CHECKOUT_TRANSACTION_MUTATION],
   ['CompleteCheckout', COMPLETE_CHECKOUT_MUTATION],
+  ['GetOrderDetails', GET_ORDER_DETAILS_QUERY],
+  ['FulfillOrder', FULFILL_ORDER_MUTATION],
 ] as const;
+

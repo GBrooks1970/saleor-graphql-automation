@@ -69,6 +69,15 @@ export const KNOWN_STEP_OPERATIONS: StepOperationMapping[] = [
   { pattern: /^the customer completes the checkout$/, operationType: 'mutation', operationName: 'checkoutComplete' },
   { pattern: /^a confirmed order should be created$/, operationType: 'assertion' },
   { pattern: /^the order should be fully charged$/, operationType: 'assertion' },
+
+  // Fulfilment steps (Mutations, queries & assertions)
+  { pattern: /^a staff member is authenticated to manage orders$/, operationType: 'mutation', operationName: 'tokenCreate' },
+  { pattern: /^the staff member locates the placed order$/, operationType: 'query', operationName: 'GetOrderDetails' },
+  { pattern: /^the order status should be /, operationType: 'assertion' },
+  { pattern: /^the order should have \d+ unfulfilled lines?$/, operationType: 'assertion' },
+  { pattern: /^the staff member fulfills all order lines from available warehouse stock$/, operationType: 'mutation', operationName: 'orderFulfill' },
+  { pattern: /^the order should record \d+ successful fulfillment$/, operationType: 'assertion' },
+  { pattern: /^all order lines should be marked as fulfilled$/, operationType: 'assertion' },
 ];
 
 export function findMutatingStep(stepText: string): { step: string; operationName: string } | null {
