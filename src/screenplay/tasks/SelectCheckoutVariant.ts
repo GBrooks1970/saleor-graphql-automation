@@ -1,4 +1,4 @@
-import { Task } from '@serenity-js/core';
+import { Task, type Actor } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
 import { CheckoutVariant, checkoutNotepadFor } from '../checkout/CheckoutNotes.js';
 import { requireOperationPayload } from '../checkout/GraphQLOperation.js';
@@ -37,7 +37,7 @@ export class SelectCheckoutVariant extends Task {
     super(`#actor selects an available product variant in channel ${channel}`);
   }
 
-  async performAs(actor: any): Promise<void> {
+  async performAs(actor: Actor): Promise<void> {
     const response = await CallGraphQL.as(actor).execute<VariantQueryData>(SELECT_CHECKOUT_VARIANT_QUERY, {
       first: 20,
       channel: this.channel,

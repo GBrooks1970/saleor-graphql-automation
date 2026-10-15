@@ -1,4 +1,4 @@
-import { Task } from '@serenity-js/core';
+import { Task, type Actor } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
 import { checkoutNotepadFor, requiredCheckoutNote } from '../checkout/CheckoutNotes.js';
 import { DomainError, requireOperationPayload } from '../checkout/GraphQLOperation.js';
@@ -28,7 +28,7 @@ export class CompleteCheckout extends Task {
     super('#actor completes the checkout and places the order');
   }
 
-  async performAs(actor: any): Promise<void> {
+  async performAs(actor: Actor): Promise<void> {
     const checkout = requiredCheckoutNote(actor, 'checkout');
     requiredCheckoutNote(actor, 'transaction');
 

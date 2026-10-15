@@ -1,10 +1,10 @@
-import { BeforeAll, AfterAll, Before, setDefaultTimeout } from '@cucumber/cucumber';
-import { actorCalled, Notepad, TakeNotes } from '@serenity-js/core';
-import { CallGraphQL } from '../../src/screenplay/abilities/CallGraphQL.js';
-import { CheckoutNotes } from '../../src/screenplay/checkout/CheckoutNotes.js';
+import { BeforeAll, AfterAll, Before, setDefaultTimeout, setWorldConstructor } from '@cucumber/cucumber';
+import { prepareScenarioActors } from '../../src/screenplay/actors/prepareScenarioActors.js';
 import { startMockServer } from '../../src/mock/server.js';
+import { SaleorWorld } from './SaleorWorld.js';
 
 setDefaultTimeout(30000);
+setWorldConstructor(SaleorWorld);
 
 let mockServerHandle: { url: string; close: () => Promise<void> } | undefined;
 
@@ -50,18 +50,5 @@ AfterAll({ timeout: 15000 }, async function () {
 
 Before(function () {
   const endpoint = process.env.SALEOR_GRAPHQL_URL || 'http://localhost:8000/graphql/';
-  const sharedCheckoutNotes = Notepad.empty<CheckoutNotes>();
-  actorCalled('Guest').whoCan(CallGraphQL.using(endpoint));
-  actorCalled('Customer').whoCan(
-    CallGraphQL.using(endpoint),
-    TakeNotes.using(sharedCheckoutNotes)
-  );
-  actorCalled('Admin').whoCan(
-    CallGraphQL.using(endpoint),
-    TakeNotes.using(sharedCheckoutNotes)
-  );
-  actorCalled('Staff').whoCan(
-    CallGraphQL.using(endpoint),
-    TakeNotes.using(sharedCheckoutNotes)
-  );
+  prepareScenarioActors(endpoint);
 });

@@ -1,4 +1,4 @@
-import { Task } from '@serenity-js/core';
+import { Task, type Actor } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
 import { requireOperationPayload } from '../errors/index.js';
 import { ProductConnection } from '../questions/TheProducts.js';
@@ -51,7 +51,7 @@ export class BrowseCatalogue extends Task {
     super(`#actor browses catalogue in channel ${channel}`);
   }
 
-  async performAs(actor: any): Promise<void> {
+  async performAs(actor: Actor): Promise<void> {
     const ability = CallGraphQL.as(actor);
     const response = await ability.execute<{ products: ProductConnection }>(PRODUCTS_QUERY, {
       channel: this.channel,

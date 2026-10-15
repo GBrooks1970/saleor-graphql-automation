@@ -6,15 +6,14 @@ import { RefreshToken } from '../../src/screenplay/tasks/RefreshToken.js';
 import { QueryCurrentUser } from '../../src/screenplay/tasks/QueryCurrentUser.js';
 import { TheToken } from '../../src/screenplay/questions/TheToken.js';
 import { TheGraphQLError } from '../../src/screenplay/questions/TheGraphQLError.js';
+import { type SaleorWorld } from '../support/SaleorWorld.js';
 
-Given('a customer with credentials {string} and {string}', function (email: string, password: string) {
-  (this as any).email = email;
-  (this as any).password = password;
+Given('a customer with credentials {string} and {string}', function (this: SaleorWorld, email: string, password: string) {
+  this.credentials = { email, password };
 });
 
-When('they authenticate with their credentials', async function () {
-  const email = (this as any).email;
-  const password = (this as any).password;
+When('they authenticate with their credentials', async function (this: SaleorWorld) {
+  const { email, password } = this.requireCredentials();
   await actorCalled('Customer').attemptsTo(Authenticate.withCredentials(email, password));
 });
 
@@ -24,10 +23,10 @@ Then('a valid JWT token should be returned', async function () {
   assert.ok(token.length > 10, 'JWT access token must have meaningful length');
 });
 
-Then('a refresh token should be present', async function () {
+Then('a refresh token should be present', async function (this: SaleorWorld) {
   const refreshToken = await actorCalled('Customer').answer(TheToken.refreshToken());
   assert.ok(refreshToken, 'Refresh token must be defined');
-  (this as any).savedRefreshToken = refreshToken;
+  this.savedRefreshToken = refreshToken;
 });
 
 Then('the user profile email should be {string}', async function (expectedEmail: string) {
@@ -35,9 +34,9 @@ Then('the user profile email should be {string}', async function (expectedEmail:
   assert.strictEqual(user?.email, expectedEmail);
 });
 
-Given('a customer authenticated with {string} and {string}', async function (email: string, password: string) {
+Given('a customer authenticated with {string} and {string}', async function (this: SaleorWorld, email: string, password: string) {
   await actorCalled('Customer').attemptsTo(Authenticate.withCredentials(email, password));
-  (this as any).savedRefreshToken = await actorCalled('Customer').answer(TheToken.refreshToken());
+  this.savedRefreshToken = await actorCalled('Customer').answer(TheToken.refreshToken());
 });
 
 When('they query their current user profile', async function () {
@@ -60,8 +59,8 @@ Then('the authentication should fail with error code {string}', async function (
   );
 });
 
-When('they refresh their token using their refresh token', async function () {
-  const token = (this as any).savedRefreshToken;
+When('they refresh their token using their refresh token', async function (this: SaleorWorld) {
+  const token = this.savedRefreshToken;
   assert.ok(token, 'Saved refresh token must be present');
   await actorCalled('Customer').attemptsTo(RefreshToken.using(token));
 });

@@ -1,4 +1,4 @@
-import { Task } from '@serenity-js/core';
+import { Task, type Actor } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
 import { requireTransportSuccess } from '../errors/index.js';
 import { TokenCreatePayload } from '../questions/TheToken.js';
@@ -35,7 +35,7 @@ export class Authenticate extends Task {
     super(`#actor authenticates as ${email}`);
   }
 
-  async performAs(actor: any): Promise<void> {
+  async performAs(actor: Actor): Promise<void> {
     const ability = CallGraphQL.as(actor);
     ability.clearAuthToken();
 

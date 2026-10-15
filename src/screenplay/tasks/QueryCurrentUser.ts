@@ -1,4 +1,4 @@
-import { Task } from '@serenity-js/core';
+import { Task, type Actor } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
 import { requireOperationPayload } from '../errors/index.js';
 import { UserSummary } from '../questions/TheToken.js';
@@ -22,7 +22,7 @@ export class QueryCurrentUser extends Task {
     super('#actor queries current user profile');
   }
 
-  async performAs(actor: any): Promise<void> {
+  async performAs(actor: Actor): Promise<void> {
     const ability = CallGraphQL.as(actor);
     const response = await ability.execute<{ me: UserSummary }>(ME_QUERY);
     requireOperationPayload('GetCurrentUser', response, response.data?.me);
