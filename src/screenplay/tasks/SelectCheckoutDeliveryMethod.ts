@@ -1,4 +1,4 @@
-import { Task } from '@serenity-js/core';
+import { Task, type Actor } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
 import { checkoutNotepadFor, requiredCheckoutNote } from '../checkout/CheckoutNotes.js';
 import { DomainError, requireOperationPayload } from '../checkout/GraphQLOperation.js';
@@ -23,7 +23,7 @@ export class SelectCheckoutDeliveryMethod extends Task {
     super('#actor selects the first available checkout delivery method');
   }
 
-  async performAs(actor: any): Promise<void> {
+  async performAs(actor: Actor): Promise<void> {
     const checkout = requiredCheckoutNote(actor, 'checkout');
     if (!checkout.shippingMethodId) {
       throw new Error('No checkout shipping method has been recorded');

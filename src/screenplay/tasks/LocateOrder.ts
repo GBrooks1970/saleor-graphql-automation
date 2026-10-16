@@ -1,4 +1,4 @@
-import { Task } from '@serenity-js/core';
+import { Task, type Actor } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
 import { checkoutNotepadFor, requiredCheckoutNote, OrderDetail } from '../checkout/CheckoutNotes.js';
 import { requireOperationPayload } from '../checkout/GraphQLOperation.js';
@@ -60,7 +60,7 @@ export class LocateOrder extends Task {
     super('#actor locates the confirmed order details');
   }
 
-  async performAs(actor: any): Promise<void> {
+  async performAs(actor: Actor): Promise<void> {
     const orderId = this.explicitOrderId ?? requiredCheckoutNote(actor, 'order').id;
 
     const response = await CallGraphQL.as(actor).execute<GetOrderDetailsData>(GET_ORDER_DETAILS_QUERY, {

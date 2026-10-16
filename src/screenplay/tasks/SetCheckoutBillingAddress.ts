@@ -1,4 +1,4 @@
-import { Task } from '@serenity-js/core';
+import { Task, type Actor } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
 import { CheckoutAddressInput, requiredCheckoutNote } from '../checkout/CheckoutNotes.js';
 import { DomainError, requireOperationPayload } from '../checkout/GraphQLOperation.js';
@@ -21,7 +21,7 @@ export class SetCheckoutBillingAddress extends Task {
     super('#actor attaches a valid billing address to the checkout');
   }
 
-  async performAs(actor: any): Promise<void> {
+  async performAs(actor: Actor): Promise<void> {
     const checkout = requiredCheckoutNote(actor, 'checkout');
     const response = await CallGraphQL.as(actor).execute<BillingAddressData>(
       UPDATE_CHECKOUT_BILLING_ADDRESS_MUTATION,

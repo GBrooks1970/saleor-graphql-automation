@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { Task } from '@serenity-js/core';
+import { Task, type Actor } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
 import { CheckoutState, checkoutNotepadFor, requiredCheckoutNote } from '../checkout/CheckoutNotes.js';
 import { DomainError, requireOperationPayload } from '../checkout/GraphQLOperation.js';
@@ -29,7 +29,7 @@ export class CreateCheckout extends Task {
     super(`#actor creates a checkout containing ${quantity} selected item(s)`);
   }
 
-  async performAs(actor: any): Promise<void> {
+  async performAs(actor: Actor): Promise<void> {
     const variant = requiredCheckoutNote(actor, 'variant');
     const response = await CallGraphQL.as(actor).execute<CreateCheckoutData>(CREATE_CHECKOUT_MUTATION, {
       input: {

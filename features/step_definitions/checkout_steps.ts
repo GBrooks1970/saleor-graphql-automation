@@ -12,6 +12,7 @@ import { SetCheckoutBillingAddress } from '../../src/screenplay/tasks/SetCheckou
 import { SetCheckoutShippingAddress } from '../../src/screenplay/tasks/SetCheckoutShippingAddress.js';
 import { TheCheckout } from '../../src/screenplay/questions/TheCheckout.js';
 import { TheOrder } from '../../src/screenplay/questions/TheOrder.js';
+import { type SaleorWorld } from '../support/SaleorWorld.js';
 
 Given('an administrator can record checkout transactions', async function () {
   const email = process.env.SALEOR_ADMIN_EMAIL || 'admin@example.com';
@@ -24,14 +25,14 @@ Given('an administrator can record checkout transactions', async function () {
 
 When(
   'the customer selects an available product variant in channel {string}',
-  async function (channel: string) {
-    (this as any).checkoutChannel = channel;
+  async function (this: SaleorWorld, channel: string) {
+    this.checkoutChannel = channel;
     await actorCalled('Customer').attemptsTo(SelectCheckoutVariant.inChannel(channel));
   }
 );
 
-When('creates a checkout containing {int} item', async function (quantity: number) {
-  const channel = (this as any).checkoutChannel;
+When('creates a checkout containing {int} item', async function (this: SaleorWorld, quantity: number) {
+  const channel = this.checkoutChannel;
   assert.ok(channel, 'Checkout channel must be recorded');
   await actorCalled('Customer').attemptsTo(CreateCheckout.withSelectedVariant(channel, quantity));
 });

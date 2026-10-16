@@ -1,4 +1,4 @@
-import { Task } from '@serenity-js/core';
+import { Task, type Actor } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
 import { requireTransportSuccess } from '../errors/index.js';
 import { TokenRefreshPayload } from '../questions/TheToken.js';
@@ -25,7 +25,7 @@ export class RefreshToken extends Task {
     super('#actor refreshes the auth token');
   }
 
-  async performAs(actor: any): Promise<void> {
+  async performAs(actor: Actor): Promise<void> {
     const ability = CallGraphQL.as(actor);
     const response = await ability.execute<{ tokenRefresh: TokenRefreshPayload }>(TOKEN_REFRESH_MUTATION, {
       refreshToken: this.refreshToken,

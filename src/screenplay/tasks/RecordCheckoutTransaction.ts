@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { Task } from '@serenity-js/core';
+import { Task, type Actor } from '@serenity-js/core';
 import { CallGraphQL } from '../abilities/CallGraphQL.js';
 import { checkoutNotepadFor, requiredCheckoutNote } from '../checkout/CheckoutNotes.js';
 import { DomainError, requireOperationPayload } from '../checkout/GraphQLOperation.js';
@@ -25,7 +25,7 @@ export class RecordCheckoutTransaction extends Task {
     super('#actor records the checkout total as fully charged');
   }
 
-  async performAs(actor: any): Promise<void> {
+  async performAs(actor: Actor): Promise<void> {
     const checkout = requiredCheckoutNote(actor, 'checkout');
     const pspReference = `portfolio-${randomUUID()}`;
     const response = await CallGraphQL.as(actor).execute<TransactionData>(CREATE_CHECKOUT_TRANSACTION_MUTATION, {
