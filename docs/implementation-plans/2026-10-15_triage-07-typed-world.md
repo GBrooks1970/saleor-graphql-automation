@@ -4,9 +4,9 @@ created: 2026-10-15T14:33Z
 project: saleor-graphql-automation
 type: implementation-plan
 item: TRIAGE-07
-status: approved
+status: implemented
 approved: 2026-10-15, owner authorised implementation and subsequently commit, push and PR review; merge not yet authorised
-delivered: not yet
+delivered: PR 18, squash commit 4ca143309ffc74faf957d913434f91a680a94fd1
 language: en-GB
 ---
 
@@ -78,3 +78,7 @@ The World design follows [Cucumber's documented custom World and TypeScript call
 ## Publication authorisation — 2026-10-15
 
 The owner subsequently instructed: "Action Recommended next step", referring to publishing TRIAGE-07 through PR review. Commit, push and PR creation are now authorised. The preceding local Outcome records the state before that instruction. The planned implementation is unchanged; hosted PR validation will be recorded on the pull request. Merge and exact-default-branch verification remain a subsequent approval step.
+
+## Merge outcome — 2026-10-16
+
+The owner explicitly approved merge and CI verification. [PR #18](https://github.com/GBrooks1970/saleor-graphql-automation/pull/18) merged as `4ca143309ffc74faf957d913434f91a680a94fd1`. [Exact-main CI run 38898150194](https://github.com/GBrooks1970/saleor-graphql-automation/actions/runs/38898150194) completed successfully. Local main was fast-forwarded to that commit before beginning SGR-P3-01. TRIAGE-07 is delivered.
