@@ -1,7 +1,7 @@
 # Canonical Project Backlog: saleor-graphql-automation
 
-**Current Version:** v4
-**Last Updated:** 2026-10-07
+**Current Version:** v5
+**Last Updated:** 2026-10-16
 **Project:** Fourteenth Portfolio Project (P-12) — Saleor GraphQL Automation  
 **Repository:** `GBrooks1970/saleor-graphql-automation`  
 
@@ -23,7 +23,7 @@
 | **SGR-P2-01** | FR-2: Stateful Checkout BDD Journey | 2 | FEATURE | Done | HIGH | 19 |
 | **SGR-P2-02** | FR-5: Staff Order Fulfilment Journey | 2 | FEATURE | Done | MEDIUM | 16 |
 | **SGR-P2-03** | NFR-1 & NFR-2: Latency Telemetry & Error Model | 2 | QUALITY | Done | MEDIUM | 15 |
-| **SGR-P3-01** | Living Documentation & GitHub Pages | 3 | SHOWCASE | Backlog | LOW | 12 |
+| **SGR-P3-01** | Living Documentation & GitHub Pages | 3 | SHOWCASE | In Progress | LOW | 12 |
 | **SGR-P3-02** | Upstream Schema Drift & Alerting Monitor | 3 | RELIABILITY | Backlog | LOW | 11 |
 
 ---
@@ -95,3 +95,24 @@
   4. Deterministic verification gate (`npm run verify`) passes in full.
 - **Completion evidence:** Delivered in PR #10 (`d3ce465`).
 
+
+### SGR-P3-01: Living Documentation & GitHub Pages
+- **Goal:** Generate navigable Serenity/JS documentation from actual scenario execution and publish verified main results through GitHub Pages.
+- **Acceptance criteria:**
+  1. Separate smoke and API reports expose feature narratives, scenario outcomes and nested Screenplay activities without double-counting overlapping scenarios.
+  2. The verification gate rejects missing, partial, failed or skipped reports and builds a landing page only after complete passing results.
+  3. Failed scenario execution remains non-zero and preserves available diagnostic reports.
+  4. PR and main CI retain reports; only successful main pushes can deploy, with Pages permissions confined to the deployment job.
+  5. Pages is configured for GitHub Actions; exact-main CI and the returned hosted URL are verified after merge.
+- **Current evidence:** Local implementation on `codex/saleor-sgr-p3-01-living-docs`; 56 unit tests, 23 contract tests, 3 smoke scenarios and 9 API scenarios pass. Negative failure probe and browser inspection pass. Publication, Pages activation and hosted acceptance remain outstanding.
+- **Plan and operation:** `docs/implementation-plans/2026-10-16_sgr-p3-01-living-documentation.md` and `docs/reporting.md`.
+
+### SGR-P3-02: Upstream Schema Drift & Alerting Monitor
+- **Goal:** Schedule upstream introspection and classify schema changes using the existing fail-closed schema contract gate.
+- **Status:** Backlog. Select the upstream endpoint, schedule and alert destination before implementing the monitor. Existing offline checks do not establish live upstream monitoring.
+
+## 3. Review remediation delivery
+
+- **TRIAGE-06:** Node 24-compatible CI actions delivered through PR #17, merge `3ae08cc71af195571dde481f3a1c562b939700eb`.
+- **TRIAGE-07:** Typed Cucumber World and Screenplay boundaries delivered through PR #18, merge `4ca143309ffc74faf957d913434f91a680a94fd1`. Exact-main CI run `38898150194` succeeded on 2026-10-16.
+- Portfolio worklist and historical handover reconciliation is separate from this nested repository; their older open statuses are superseded by this merge evidence.

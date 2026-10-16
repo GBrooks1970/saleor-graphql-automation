@@ -107,3 +107,10 @@ saleor-graphql-automation/
 - **Phase 1:** Core Foundation, Schema Diffing & Read/Auth Journeys (Completed 2026-09-05).
 - **Phase 2:** Stateful Checkout, Staff Fulfilment & Advanced Error Handling (Active).
 - **Phase 3:** Serenity/JS Living Documentation, Drift Monitoring & Portfolio Showcase.
+
+
+### Phase 3 reporting implementation (2026-10-16)
+
+The native Serenity/JS HTML reporter receives Cucumber execution events and records feature narratives and Screenplay activities. Reports are isolated by suite under `target/site/serenity`, with a validated landing page linking the full API suite and its separately executed smoke subset. `npm run verify` cleans previous output and checks report coverage against compiled Gherkin before success. No Java runtime is required.
+
+CI retains diagnostics and prepares deployment from successful main pushes using a separate Pages job with narrow permissions. SGR-P3-01 remains in progress until repository Pages activation, publication and hosted verification are complete. See [reporting operations](docs/reporting.md) and the canonical backlog for evidence boundaries.

@@ -1,4 +1,7 @@
 import { BeforeAll, AfterAll, Before, setDefaultTimeout, setWorldConstructor } from '@cucumber/cucumber';
+import { configure } from '@serenity-js/core';
+import { ConsoleReporter } from '@serenity-js/console-reporter';
+import { HtmlReporter } from '@serenity-js/html-reporter';
 import { prepareScenarioActors } from '../../src/screenplay/actors/prepareScenarioActors.js';
 import { startMockServer } from '../../src/mock/server.js';
 import { SaleorWorld } from './SaleorWorld.js';
@@ -9,6 +12,24 @@ setWorldConstructor(SaleorWorld);
 let mockServerHandle: { url: string; close: () => Promise<void> } | undefined;
 
 BeforeAll({ timeout: 30000 }, async function () {
+  const suite = process.env.SERENITY_REPORT_SUITE ?? 'default';
+  if (!['default', 'smoke', 'api', 'checkout'].includes(suite)) {
+    throw new Error(`Unknown Serenity report suite: ${suite}`);
+  }
+  configure({
+    crew: [
+      ConsoleReporter.fromJSON({ theme: 'auto' }),
+      HtmlReporter.fromJSON({
+        outputDirectory: `target/site/serenity/${suite}`,
+        specDirectory: './features',
+        title: `Saleor GraphQL Automation — ${suite}`,
+        projectName: 'Saleor GraphQL Automation',
+        testRunId: 'current',
+        moduleId: suite,
+        maxHistory: 1,
+      }),
+    ],
+  });
   const explicitTargetUrl = process.env.SALEOR_GRAPHQL_URL;
 
   if (!explicitTargetUrl) {

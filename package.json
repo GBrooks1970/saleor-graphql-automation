@@ -6,7 +6,7 @@
   "author": "Gary Brooks",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": "^22.22.2 || ^24.15.0"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -15,16 +15,18 @@
     "check:schema": "tsx scripts/check-schema-contract.ts",
     "check:schema:live": "tsx scripts/check-schema-contract.ts --live",
     "check:smoke-safety": "tsx scripts/check-smoke-safety.ts",
-    "test:smoke": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile smoke",
-    "test:api": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile api",
-    "test:checkout": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile api --tags \"@mutating\"",
+    "test:smoke": "node scripts/run-cucumber.mjs smoke",
+    "test:api": "node scripts/run-cucumber.mjs api",
+    "test:checkout": "node scripts/run-cucumber.mjs checkout --tags \"@mutating\"",
     "sut:wait": "tsx scripts/wait-for-sut.ts",
     "sut:up": "docker compose -f docker/docker-compose.yml up -d",
     "sut:down": "docker compose -f docker/docker-compose.yml down",
     "sut:migrate": "docker compose -f docker/docker-compose.yml run --rm api python3 manage.py migrate",
     "sut:seed": "docker compose -f docker/docker-compose.yml run --rm api python3 manage.py populatedb --createsuperuser",
     "test": "npm run test:unit && npm run test:contract && npm run test:api",
-    "verify": "npm run typecheck && npm run test:unit && npm run check:smoke-safety && npm run test:contract && npm run test:smoke && npm run test:api"
+    "verify": "npm run typecheck && npm run test:unit && npm run check:smoke-safety && npm run test:contract && npm run test:smoke && npm run test:api && npm run check:reports",
+    "preverify": "node scripts/clean-reports.mjs",
+    "check:reports": "tsx scripts/check-reports.ts"
   },
   "dependencies": {
     "@graphql-inspector/core": "^4.2.1",
@@ -36,6 +38,8 @@
     "@serenity-js/console-reporter": "^3.44.1",
     "@serenity-js/core": "^3.44.1",
     "@serenity-js/cucumber": "^3.44.1",
+    "@serenity-js/html-reporter": "3.46.0",
+    "@serenity-js/web": "3.46.0",
     "@types/node": "^22.13.0",
     "tsx": "^4.23.1",
     "typescript": "^5.7.3"

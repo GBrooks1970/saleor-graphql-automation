@@ -1,7 +1,7 @@
 # Saleor GraphQL Automation (P-12)
 
 [![CI](https://github.com/GBrooks1970/saleor-graphql-automation/actions/workflows/ci.yml/badge.svg)](https://github.com/GBrooks1970/saleor-graphql-automation/actions/workflows/ci.yml)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org/)
+[![Node.js Version](https://img.shields.io/badge/node-24.15%2B-brightgreen.svg)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Pattern: Screenplay](https://img.shields.io/badge/pattern-Screenplay-blueviolet.svg)](https://serenity-js.org/)
 [![SUT: Saleor 3.23](https://img.shields.io/badge/SUT-Saleor%203.23-teal.svg)](https://saleor.io/)
@@ -59,7 +59,7 @@ saleor-graphql-automation/
 ## Quick Start
 
 ### Prerequisites
-- Node.js 20+ and npm
+- Node.js 24.15+ (CI uses Node 24) and npm; Node 22.22.2+ is also supported by the installed Serenity/JS packages
 - Docker Desktop (WSL2 engine configured on `E:\_DockerData`)
 
 ### 1. Install Dependencies
@@ -89,7 +89,8 @@ The gate always starts the embedded SUT unless `SALEOR_GRAPHQL_URL` is explicitl
 | `npm run test:smoke` | Runs read-only smoke scenarios against local or demo instances |
 | `npm run test:api` | Runs full BDD GraphQL journey suite |
 | `npm run test:checkout` | Runs only the `@mutating` stateful checkout journey |
-| `npm run verify` | Complete verification gate: typecheck, unit, contract, smoke, and API tests |
+| `npm run verify` | Clean reports, typecheck, unit, contract, smoke, API tests, and report integrity |
+| `npm run check:reports` | Validate complete passing smoke/API reports and build the documentation landing page |
 | `npm run sut:up` / `npm run sut:down` | Starts or stops the pinned Docker SUT without deleting its seeded volumes |
 | `npm run sut:migrate` / `npm run sut:seed` | Applies Saleor migrations and creates the deterministic sample dataset |
 
@@ -98,3 +99,7 @@ The gate always starts the embedded SUT unless `SALEOR_GRAPHQL_URL` is explicitl
 ## Architecture & Design Decisions
 
 See [design-document.md](design-document.md) and [docs/decision-register.md](docs/decision-register.md) for detailed architecture, requirements tracing, and ADRs.
+
+## Living Documentation
+
+`npm run verify` produces `target/site/serenity/index.html`, linking separate full API and read-only smoke reports. Open it through a local HTTP server; see [reporting instructions](docs/reporting.md) for browsing, CI artifacts and Pages setup. Reports describe the embedded mock SUT by default. GitHub Pages publication is pending activation and verification.
