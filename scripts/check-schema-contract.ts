@@ -24,7 +24,7 @@ import { diff, CriticalityLevel } from '@graphql-inspector/core';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const BASELINE_PATH = path.resolve(__dirname, '../schema/saleor-3.23.graphql');
+export const BASELINE_PATH = path.resolve(__dirname, '../schema/saleor-3.23.graphql');
 
 export interface ContractValidationResult {
   /** Domain breaking changes that violate client contracts (fails validation) */
@@ -66,18 +66,18 @@ export function isBuiltInDirectiveSpecDifference(change: InspectorChange | { typ
   return false;
 }
 
-export async function loadBaselineSchema(): Promise<GraphQLSchema> {
-  const content = fs.readFileSync(BASELINE_PATH, 'utf8');
+export async function loadBaselineSchema(baselinePath: string = BASELINE_PATH): Promise<GraphQLSchema> {
+  const content = fs.readFileSync(baselinePath, 'utf8');
   return buildSchema(content);
 }
 
-export async function fetchLiveSchema(endpoint: string): Promise<GraphQLSchema | null> {
+export async function fetchLiveSchema(endpoint: string, timeoutMs = 15000): Promise<GraphQLSchema | null> {
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query: getIntrospectionQuery() }),
-      signal: AbortSignal.timeout(15000),
+      signal: AbortSignal.timeout(timeoutMs),
     });
 
     if (!response.ok) {

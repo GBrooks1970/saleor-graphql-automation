@@ -26,7 +26,8 @@
     "test": "npm run test:unit && npm run test:contract && npm run test:api",
     "verify": "npm run typecheck && npm run test:unit && npm run check:smoke-safety && npm run test:contract && npm run test:smoke && npm run test:api && npm run check:reports",
     "preverify": "node scripts/clean-reports.mjs",
-    "check:reports": "tsx scripts/check-reports.ts"
+    "check:reports": "tsx scripts/check-reports.ts",
+    "monitor:schema": "tsx scripts/monitor-schema.ts"
   },
   "dependencies": {
     "@graphql-inspector/core": "^4.2.1",

@@ -1,0 +1,56 @@
+name: Upstream schema monitor
+
+on:
+  schedule:
+    - cron: '17 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: upstream-schema-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    name: Compare upstream schema with reviewed baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout reviewed baseline and monitor
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Inspect upstream schema
+        env:
+          SALEOR_SCHEMA_MONITOR_SOURCE: ${{ vars.SALEOR_SCHEMA_MONITOR_SOURCE || 'sdl' }}
+          SALEOR_SCHEMA_MONITOR_URL: ${{ vars.SALEOR_SCHEMA_MONITOR_URL }}
+        run: npm run monitor:schema
+
+      - name: Publish run summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f target/schema-drift/summary.md ]; then
+            cat target/schema-drift/summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Schema monitoring did not produce a report. Inspect the failed setup or monitor step; upstream compatibility is unknown.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Retain schema evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: schema-drift-${{ github.run_id }}-${{ github.run_attempt }}
+          path: target/schema-drift/
+          if-no-files-found: warn
+          retention-days: 30

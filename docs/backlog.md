@@ -1,7 +1,7 @@
 # Canonical Project Backlog: saleor-graphql-automation
 
-**Current Version:** v5
-**Last Updated:** 2026-10-16
+**Current Version:** v6
+**Last Updated:** 2026-10-18
 **Project:** Fourteenth Portfolio Project (P-12) — Saleor GraphQL Automation  
 **Repository:** `GBrooks1970/saleor-graphql-automation`  
 
@@ -23,8 +23,8 @@
 | **SGR-P2-01** | FR-2: Stateful Checkout BDD Journey | 2 | FEATURE | Done | HIGH | 19 |
 | **SGR-P2-02** | FR-5: Staff Order Fulfilment Journey | 2 | FEATURE | Done | MEDIUM | 16 |
 | **SGR-P2-03** | NFR-1 & NFR-2: Latency Telemetry & Error Model | 2 | QUALITY | Done | MEDIUM | 15 |
-| **SGR-P3-01** | Living Documentation & GitHub Pages | 3 | SHOWCASE | In Progress | LOW | 12 |
-| **SGR-P3-02** | Upstream Schema Drift & Alerting Monitor | 3 | RELIABILITY | Backlog | LOW | 11 |
+| **SGR-P3-01** | Living Documentation & GitHub Pages | 3 | SHOWCASE | Done | LOW | 12 |
+| **SGR-P3-02** | Upstream Schema Drift & Alerting Monitor | 3 | RELIABILITY | In Progress | LOW | 11 |
 
 ---
 
@@ -104,12 +104,19 @@
   3. Failed scenario execution remains non-zero and preserves available diagnostic reports.
   4. PR and main CI retain reports; only successful main pushes can deploy, with Pages permissions confined to the deployment job.
   5. Pages is configured for GitHub Actions; exact-main CI and the returned hosted URL are verified after merge.
-- **Current evidence:** Local implementation on `codex/saleor-sgr-p3-01-living-docs`; 56 unit tests, 23 contract tests, 3 smoke scenarios and 9 API scenarios pass. Negative failure probe and browser inspection pass. Publication, Pages activation and hosted acceptance remain outstanding.
+- **Completion evidence:** PR #19 merged as `7524176cc19921c1bbc5f9ca8959aa3aca9c2ffd`. PR CI `38906564811` and exact-main CI `38906680249` passed, including report artifacts and Pages deployment. Hosted browser checks verified the exact merge revision, API 9/9 and smoke 3/3 at https://gbrooks1970.github.io/saleor-graphql-automation/.
 - **Plan and operation:** `docs/implementation-plans/2026-10-16_sgr-p3-01-living-documentation.md` and `docs/reporting.md`.
 
 ### SGR-P3-02: Upstream Schema Drift & Alerting Monitor
 - **Goal:** Schedule upstream introspection and classify schema changes using the existing fail-closed schema contract gate.
-- **Status:** Backlog. Select the upstream endpoint, schedule and alert destination before implementing the monitor. Existing offline checks do not establish live upstream monitoring.
+- **Status:** In Progress. Owner accepted daily 07:17 UTC checks and GitHub Actions failures with retained reports. The owner approved official 3.23 schema-file monitoring by default, optional live introspection and merge on 2026-10-18. Operational acceptance remains pending the published workflow run.
+- **Acceptance criteria:**
+  1. Compare official upstream SDL (default) or explicit live introspection against the committed baseline using ADR-010 without offline fallback.
+  2. Report timestamp, source type/URL, revision, baseline and upstream SDL hashes, and all classified changes; preserve reports on failure.
+  3. Fail on domain breaks, missing configuration, unreachable endpoints or invalid introspection; keep other differences visible.
+  4. Schedule daily/manual execution with read-only repository permissions, bounded requests and 30-day artifacts.
+  5. Verify the selected source in a real Actions run after publication; review baseline changes through a separate PR.
+- **Plan and operation:** `docs/implementation-plans/2026-10-16_sgr-p3-02-schema-monitor.md` and `docs/schema-monitoring.md`.
 
 ## 3. Review remediation delivery
 

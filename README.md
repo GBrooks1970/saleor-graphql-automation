@@ -84,6 +84,7 @@ The gate always starts the embedded SUT unless `SALEOR_GRAPHQL_URL` is explicitl
 | `npm run test:unit` | Executes unit tests for abilities, error parsers, and safety guards |
 | `npm run test:contract` | Executes bidirectional schema diff contract tests |
 | `npm run check:schema` | Validates baseline schema snapshot self-consistency offline |
+| `npm run monitor:schema` | Downloads the official 3.23 schema by default; optional live introspection; retained drift reports |
 | `npm run check:schema:live` | Diffs live Saleor introspection schema against baseline, failing closed on unreachable endpoints or domain breaks (ADR-010) |
 | `npm run check:smoke-safety`| Asserts that no `@mutating` scenario is tagged with `@smoke` |
 | `npm run test:smoke` | Runs read-only smoke scenarios against local or demo instances |
@@ -102,4 +103,8 @@ See [design-document.md](design-document.md) and [docs/decision-register.md](doc
 
 ## Living Documentation
 
-`npm run verify` produces `target/site/serenity/index.html`, linking separate full API and read-only smoke reports. Open it through a local HTTP server; see [reporting instructions](docs/reporting.md) for browsing, CI artifacts and Pages setup. Reports describe the embedded mock SUT by default. GitHub Pages publication is pending activation and verification.
+`npm run verify` produces `target/site/serenity/index.html`, linking separate full API and read-only smoke reports. Open it through a local HTTP server; see [reporting instructions](docs/reporting.md) for browsing, CI artifacts and Pages setup. Reports describe the embedded mock SUT by default. [Published living documentation](https://gbrooks1970.github.io/saleor-graphql-automation/) was verified after PR #19 deployment.
+
+## Upstream Schema Monitor
+
+The separate daily/manual workflow downloads the official Saleor 3.23 schema by default, compares it with the reviewed baseline and retains JSON/Markdown drift reports. Live introspection is optional. See [schema monitoring](docs/schema-monitoring.md) for the 07:17 UTC schedule, source settings, notification behaviour and reviewed baseline promotion. Operational acceptance is pending publication and a verified workflow run.

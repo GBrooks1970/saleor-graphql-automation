@@ -4,9 +4,9 @@ created: 2026-10-16
 project: saleor-graphql-automation
 type: implementation-plan
 item: SGR-P3-01
-status: implemented-locally
+status: complete
 approved: 2026-10-16, owner instructed proceeding to the next item after merging TRIAGE-07; implementation authorised
-delivered: local implementation verified 2026-10-16; publication and hosted acceptance pending
+delivered: PR 19 merged 2026-10-16; exact-main CI and hosted acceptance passed
 language: en-GB
 ---
 
@@ -57,7 +57,7 @@ Branch: `codex/saleor-sgr-p3-01-living-docs`. Prepare and validate implementatio
 | Suite representation | Combine overlapping runs or retain separate suite reports | Separate smoke/API reports | Resolved within scope to preserve truthful counts. |
 | Publication | Local preparation followed by PR and main deployment | Review validated implementation before publication | Owner approved merge and CI verification on 2026-10-16. |
 
-## Implementation and empirical verification outcome — 2026-10-16
+## Implementation and empirical verification outcome â€” 2026-10-16
 
 - Added native HTML reporting and its web peer at exact version 3.46.0, retaining the installed Serenity framework version. Updated declared Node support to the installed framework engines (`^22.22.2 || ^24.15.0`); CI remains Node 24.
 - The initial reporting probe passed Cucumber but emitted no report. Root cause: Cucumber keeps only one stdout formatter; adding `summary` after the Serenity adapter replaces the adapter. Using the adapter alone and configuring `ConsoleReporter` restored report generation. Missing output is now a failing gate condition.
@@ -69,8 +69,15 @@ Branch: `codex/saleor-sgr-p3-01-living-docs`. Prepare and validate implementatio
 - Dependency install reports **10 high-severity affected packages**. The two added reporter packages inherit existing vulnerable dependency chains; no new root advisory was introduced. The suggested Serenity audit fix would downgrade framework packages and was not applied. Dependency remediation remains a separate follow-up.
 - **Not yet evidenced:** a CI run on this new branch, retained GitHub artifacts, Pages activation or a hosted deployment. The prior exact-main success is for TRIAGE-07 at `4ca143309ffc74faf957d913434f91a680a94fd1`, not for these uncommitted reporting changes.
 
-## Publication authority update — 2026-10-16
+## Publication authority update â€” 2026-10-16
 
 The owner approved merge and CI verification, followed by the next item. Commit, push, PR creation, Pages activation and merge are the required steps for this reviewed implementation. Hosted completion will be recorded only after exact-main CI and browser evidence.
 
 Pages activation succeeded through the repository API on 2026-10-16 (`build_type: workflow`, HTTPS enforced). The generated `github-pages` environment has a single deployment branch policy for `main`.
+
+## Publication and hosted acceptance â€” 2026-10-16
+
+- PR #19 head `009705bc6305d9fe3a4851d1c8777378b15517ae`; PR CI `38906564811` passed and retained the report artifact for its synthetic PR merge revision.
+- Squash merge `7524176cc19921c1bbc5f9ca8959aa3aca9c2ffd`; exact-main CI `38906680249` passed both Verify and Publish living documentation. Local main fast-forwarded cleanly to that revision before SGR-P3-02 began.
+- Main artifacts: `serenity-reports-7524176cc19921c1bbc5f9ca8959aa3aca9c2ffd` (357660 bytes) and `github-pages` (354768 bytes), neither expired at inspection.
+- Browser inspection of https://gbrooks1970.github.io/saleor-graphql-automation/ confirmed the exact merge revision, API dashboard 9/9 and smoke dashboard 3/3, zero failures. SGR-P3-01 acceptance is complete.
