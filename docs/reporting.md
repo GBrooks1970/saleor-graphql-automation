@@ -24,12 +24,14 @@ Every PR and main push runs the verification gate. Available reports are retaine
 
 Only successful pushes to `main` package the verified site and enter the Pages deployment job. PRs cannot deploy. The verification job has read-only repository access; only deployment receives `pages:write` and `id-token:write`. Pages deployments are serialised without cancelling an active deployment. All JavaScript actions use Node 24-compatible majors.
 
-**Activation is pending.** Before merging this item, an authorised maintainer must select **Settings → Pages → Build and deployment → Source: GitHub Actions**, and check that the `github-pages` environment allows `main`. This change prepares the workflow; it does not enable repository Pages settings. Merging without that configuration can make the deployment job fail even when verification succeeds.
+**Pages activation and hosted acceptance passed on 2026-10-16.** Build type is `workflow` and the `github-pages` environment permits `main` only. PR #19 merged as `7524176cc19921c1bbc5f9ca8959aa3aca9c2ffd`; exact-main CI `38906680249` passed verification and deployment.
 
-After approval and publication, record the PR head checks, merge commit and CI run whose `headSha` exactly matches current `main`. Confirm the deployment job succeeds, open its returned URL, and inspect the landing page and both suites. SGR-P3-01 remains in progress until that hosted evidence exists.
+After approval and publication, record the PR head checks, merge commit and CI run whose `headSha` exactly matches current `main`. Confirm the deployment job succeeds, open its returned URL, and inspect the landing page and both suites. SGR-P3-01 is complete; hosted inspection confirmed the exact revision and both passing suites.
 
 ## References
 
 - [Native Serenity/JS HTML reporter](https://serenity-js.org/handbook/reporting/html-reporter/)
 - [HTML reporter configuration](https://serenity-js.org/api/html-reporter/interface/HtmlReporterConfig/)
 - [GitHub Pages deployment action](https://github.com/actions/deploy-pages)
+
+Published site: https://gbrooks1970.github.io/saleor-graphql-automation/.
