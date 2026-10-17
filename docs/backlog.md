@@ -126,6 +126,6 @@
 
 ## 4. Maintenance follow-up (2026-10-18)
 
-- Transitive dependency patch: `brace-expansion` 5.0.9 to 5.0.12 is prepared locally on `codex/saleor-dependency-maintenance`. Only the corresponding lockfile entry changes; publication remains pending.
+- Transitive dependency patch: PR #21 updates `brace-expansion` 5.0.9 to 5.0.12. Only the corresponding lockfile entry changes; the full local verification gate passed. Publication and CI evidence are available on the PR.
 - Remaining audit: 9 high affected packages inherit the unpatched `braces` 3.0.3 stack-exhaustion advisory, GHSA-vfj7-8cjw-p6xm. No patched release was available at inspection. Keep this dependency risk open; do not downgrade Serenity to 2.x to satisfy audit output.
 - Scheduled monitor firing and notification delivery are observation follow-ups, distinct from the successful manual workflow run.
