@@ -4,7 +4,7 @@ created: 2026-10-16
 project: saleor-graphql-automation
 type: implementation-plan
 item: SGR-P3-02
-status: implemented-locally
+status: complete
 approved: owner instructed proceeding to next item and accepted daily 07:17 UTC checks with GitHub Actions failure reporting
 language: en-GB
 ---
@@ -48,3 +48,9 @@ The owner instructed merge and continue after the recommendation to monitor the 
 Default SDL mode and optional explicit introspection are implemented. Twelve targeted monitor tests passed. The full gate exited 0 with 56 unit tests, 35 contract tests, 3 smoke scenarios and 9 API scenarios; both report checks passed. Workflow YAML/permissions/schedule checks and `git diff --check` passed. Documents were normalised to UTF-8 and the previous reporting completion claims reconciled.
 
 The actual default source fetch exited 0: compatible, zero domain breaks, 117 other changes. Baseline SHA-256: `36a111ba8f822b25a62fa82df0d7e4477e1aebc611d70adb83f5006a5cf76624`; upstream SDL SHA-256: `bf37d116a6e04354cbb9c35a4ee1343ab0602269b2b4ee0f8872adaa03abec6d`. The baseline was not promoted. This local network check does not replace post-merge workflow acceptance.
+
+## Merge and operational acceptance - 2026-10-18 (Europe/London)
+
+PR #20 head `cb2aa0bf0649dd670b953c00bb56465764d52445` passed PR CI `39078857724` and merged as `c799d0710e7e70fcceb12492ce49e9020126b298`. Exact-main CI `39078903688`, including Pages deployment, and manual monitor run `39078905171` succeeded for that same SHA. Main was clean and synchronised before the dependency-maintenance branch began.
+
+Artifact `schema-drift-39078905171-1` (ID 12117843774, 5204 bytes) was downloaded and inspected. Its JSON records the exact main revision, SDL mode, zero domain breaks and 117 other changes; source and baseline hashes match the pre-publication probe. The report observation timestamp is `2026-10-17T23:24:41.568Z` (18 October in Europe/London). The workflow is active. This proves manual execution and artifact retention, not first scheduled execution or notification delivery.
