@@ -61,3 +61,7 @@ Local HTTP tests cover SDL success, additions, domain breaks, invalid/empty/over
 - [Scheduled workflow behaviour](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
 - [Workflow notifications](https://docs.github.com/en/actions/concepts/workflows-and-actions/notifications-for-workflow-runs)
 - [Saleor GraphQL conventions](https://docs.saleor.io/api-usage/overview)
+
+## Published acceptance - 2026-10-18
+
+PR #20 merged as `c799d0710e7e70fcceb12492ce49e9020126b298`. Exact-main CI [39078903688](https://github.com/GBrooks1970/saleor-graphql-automation/actions/runs/39078903688) and manual monitor [39078905171](https://github.com/GBrooks1970/saleor-graphql-automation/actions/runs/39078905171) passed. The downloaded artifact confirms that revision, SDL mode, zero domain breaks and 117 other differences. Scheduled firing and notification delivery are not yet observed.

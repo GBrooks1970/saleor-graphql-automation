@@ -1,6 +1,6 @@
 # Canonical Project Backlog: saleor-graphql-automation
 
-**Current Version:** v6
+**Current Version:** v7
 **Last Updated:** 2026-10-18
 **Project:** Fourteenth Portfolio Project (P-12) — Saleor GraphQL Automation  
 **Repository:** `GBrooks1970/saleor-graphql-automation`  
@@ -24,7 +24,7 @@
 | **SGR-P2-02** | FR-5: Staff Order Fulfilment Journey | 2 | FEATURE | Done | MEDIUM | 16 |
 | **SGR-P2-03** | NFR-1 & NFR-2: Latency Telemetry & Error Model | 2 | QUALITY | Done | MEDIUM | 15 |
 | **SGR-P3-01** | Living Documentation & GitHub Pages | 3 | SHOWCASE | Done | LOW | 12 |
-| **SGR-P3-02** | Upstream Schema Drift & Alerting Monitor | 3 | RELIABILITY | In Progress | LOW | 11 |
+| **SGR-P3-02** | Upstream Schema Drift & Alerting Monitor | 3 | RELIABILITY | Done | LOW | 11 |
 
 ---
 
@@ -109,7 +109,7 @@
 
 ### SGR-P3-02: Upstream Schema Drift & Alerting Monitor
 - **Goal:** Schedule upstream introspection and classify schema changes using the existing fail-closed schema contract gate.
-- **Status:** In Progress. Owner accepted daily 07:17 UTC checks and GitHub Actions failures with retained reports. The owner approved official 3.23 schema-file monitoring by default, optional live introspection and merge on 2026-10-18. Operational acceptance remains pending the published workflow run.
+- **Status:** Done. PR #20 merged as `c799d0710e7e70fcceb12492ce49e9020126b298`; exact-main CI `39078903688` and manual monitor run `39078905171` passed. The retained report identifies that revision and the official 3.23 SDL, with zero domain breaks and 117 other changes. Daily 07:17 UTC scheduling is configured; its first scheduled firing and notification delivery have not been observed.
 - **Acceptance criteria:**
   1. Compare official upstream SDL (default) or explicit live introspection against the committed baseline using ADR-010 without offline fallback.
   2. Report timestamp, source type/URL, revision, baseline and upstream SDL hashes, and all classified changes; preserve reports on failure.
@@ -123,3 +123,9 @@
 - **TRIAGE-06:** Node 24-compatible CI actions delivered through PR #17, merge `3ae08cc71af195571dde481f3a1c562b939700eb`.
 - **TRIAGE-07:** Typed Cucumber World and Screenplay boundaries delivered through PR #18, merge `4ca143309ffc74faf957d913434f91a680a94fd1`. Exact-main CI run `38898150194` succeeded on 2026-10-16.
 - Portfolio worklist and historical handover reconciliation is separate from this nested repository; their older open statuses are superseded by this merge evidence.
+
+## 4. Maintenance follow-up (2026-10-18)
+
+- Transitive dependency patch: PR #21 updates `brace-expansion` 5.0.9 to 5.0.12. Only the corresponding lockfile entry changes; the full local verification gate passed. Publication and CI evidence are available on the PR.
+- Remaining audit: 9 high affected packages inherit the unpatched `braces` 3.0.3 stack-exhaustion advisory, GHSA-vfj7-8cjw-p6xm. No patched release was available at inspection. Keep this dependency risk open; do not downgrade Serenity to 2.x to satisfy audit output.
+- Scheduled monitor firing and notification delivery are observation follow-ups, distinct from the successful manual workflow run.
