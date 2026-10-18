@@ -75,4 +75,12 @@ Downloaded artifact `schema-drift-39107672846-1` (ID `12129560327`, 5205 bytes) 
 - Baseline SHA-256: `36a111ba8f822b25a62fa82df0d7e4477e1aebc611d70adb83f5006a5cf76624`.
 - Upstream SDL SHA-256: `bf37d116a6e04354cbb9c35a4ee1343ab0602269b2b4ee0f8872adaa03abec6d`.
 
-The verification watch was paused after assessing the run and artifacts. Notification settings and delivery remain **unverified**: the repository-subscription API returned HTTP 404 and the CLI identified the missing `notifications` scope. This does not establish that notifications are disabled. The owner must confirm their GitHub Actions notification preferences and destination separately; a successful scheduled run does not demonstrate failure-alert delivery. No notification settings, schema baseline or workflow were changed during this verification.
+The verification watch was paused after assessing the run and artifacts. The initial repository-subscription API request returned HTTP 404 and the CLI identified the missing `notifications` scope. Authenticated browser inspection subsequently resolved the settings-verification gap, as recorded below. No notification settings, schema baseline or workflow were changed during verification.
+
+### Notification settings verified - 2026-10-18
+
+After the owner signed in, read-only inspection of the account's GitHub notification settings showed **Actions: on GitHub and Email, failed workflows only**. A default notification email was configured; the address is intentionally omitted from this public record. The Saleor repository's subscription was **Participating**. These are observed settings, not a guarantee of eligibility or receipt for every workflow run.
+
+**Actual failure-alert delivery remains untested.** No deliberate workflow failure, test email, subscription change or notification-setting change was performed. The successful scheduled run and the enabled preferences do not demonstrate end-to-end delivery. Settings verification is complete; delivery remains an explicit evidence limitation.
+
+The separate owner-approved weekly `braces` fix watch is active in the app on Mondays at 09:00. It checks the advisory and compatible upstream releases, notifies on an actionable candidate or check failure, and pauses for approval when a candidate is found. It does not install dependencies or publish changes. The completed scheduled-run verification watch remains paused.
