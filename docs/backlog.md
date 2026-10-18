@@ -1,6 +1,6 @@
 # Canonical Project Backlog: saleor-graphql-automation
 
-**Current Version:** v7
+**Current Version:** v8
 **Last Updated:** 2026-10-18
 **Project:** Fourteenth Portfolio Project (P-12) — Saleor GraphQL Automation  
 **Repository:** `GBrooks1970/saleor-graphql-automation`  
@@ -109,7 +109,8 @@
 
 ### SGR-P3-02: Upstream Schema Drift & Alerting Monitor
 - **Goal:** Schedule upstream introspection and classify schema changes using the existing fail-closed schema contract gate.
-- **Status:** Done. PR #20 merged as `c799d0710e7e70fcceb12492ce49e9020126b298`; exact-main CI `39078903688` and manual monitor run `39078905171` passed. The retained report identifies that revision and the official 3.23 SDL, with zero domain breaks and 117 other changes. Daily 07:17 UTC scheduling is configured; its first scheduled firing and notification delivery have not been observed.
+- **Status:** Done. PR #20 merged as `c799d0710e7e70fcceb12492ce49e9020126b298`; exact-main CI `39078903688` and manual monitor run `39078905171` passed. The retained report identifies that revision and the official 3.23 SDL, with zero domain breaks and 117 other changes.
+- **Update (2026-10-18):** First scheduled execution verified: [run 39107672846](https://github.com/GBrooks1970/saleor-graphql-automation/actions/runs/39107672846), event `schedule`, succeeded on `4660ce06dc2c0a234fc3f62678c1d9ff0b653665`. Created at 07:26:35 UTC (08:26:35 BST), following the daily 07:17 UTC slot. Retained JSON/Markdown reports match the run revision: official 3.23 SDL, compatible, zero domain breaks, zero directive-spec differences and 117 other changes. Notification settings and delivery remain unverified; the connection lacks the `notifications` scope. The verification watch is paused after completion.
 - **Acceptance criteria:**
   1. Compare official upstream SDL (default) or explicit live introspection against the committed baseline using ADR-010 without offline fallback.
   2. Report timestamp, source type/URL, revision, baseline and upstream SDL hashes, and all classified changes; preserve reports on failure.
@@ -128,4 +129,4 @@
 
 - Transitive dependency patch: PR #21 updates `brace-expansion` 5.0.9 to 5.0.12. Only the corresponding lockfile entry changes; the full local verification gate passed. Publication and CI evidence are available on the PR.
 - Remaining audit: 9 high affected packages inherit the unpatched `braces` 3.0.3 stack-exhaustion advisory, GHSA-vfj7-8cjw-p6xm. No patched release was available at inspection. Keep this dependency risk open; do not downgrade Serenity to 2.x to satisfy audit output.
-- Scheduled monitor firing and notification delivery are observation follow-ups, distinct from the successful manual workflow run.
+- Scheduled execution and report retention are verified by run `39107672846`; that observation follow-up is complete. Notification settings and actual failure-alert delivery remain unverified. Confirm the account's GitHub Actions preferences and destination separately; a successful scheduled run does not prove failure-alert delivery.

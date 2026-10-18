@@ -54,3 +54,9 @@ The actual default source fetch exited 0: compatible, zero domain breaks, 117 ot
 PR #20 head `cb2aa0bf0649dd670b953c00bb56465764d52445` passed PR CI `39078857724` and merged as `c799d0710e7e70fcceb12492ce49e9020126b298`. Exact-main CI `39078903688`, including Pages deployment, and manual monitor run `39078905171` succeeded for that same SHA. Main was clean and synchronised before the dependency-maintenance branch began.
 
 Artifact `schema-drift-39078905171-1` (ID 12117843774, 5204 bytes) was downloaded and inspected. Its JSON records the exact main revision, SDL mode, zero domain breaks and 117 other changes; source and baseline hashes match the pre-publication probe. The report observation timestamp is `2026-10-17T23:24:41.568Z` (18 October in Europe/London). The workflow is active. This proves manual execution and artifact retention, not first scheduled execution or notification delivery.
+
+## Scheduled execution outcome - 2026-10-18
+
+The owner approved recording the completed scheduled-run observation and publishing the documentation through separate project and portfolio PRs. Run `39107672846` succeeded with event `schedule` on `4660ce06dc2c0a234fc3f62678c1d9ff0b653665`, created at 07:26:35 UTC. Artifact `schema-drift-39107672846-1` (ID 12129560327, 5205 bytes) contains matching JSON/Markdown reports: official 3.23 SDL, compatible, zero domain breaks, zero directive-spec differences and 117 other changes. The hashes match the earlier manual observation. See `docs/schema-monitoring.md` for full provenance.
+
+The verification watch is paused. Notification settings and delivery remain unverified because the connection lacks notification access; success does not prove failure-alert delivery. This outcome adds evidence without altering the approved monitor design or baseline. Validate the documentation with the project gate and `git diff --check`, then verify PR and exact-main CI after publication.
