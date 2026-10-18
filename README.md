@@ -107,4 +107,4 @@ See [design-document.md](design-document.md) and [docs/decision-register.md](doc
 
 ## Upstream Schema Monitor
 
-The separate daily/manual workflow downloads the official Saleor 3.23 schema by default, compares it with the reviewed baseline and retains JSON/Markdown drift reports. Live introspection is optional. See [schema monitoring](docs/schema-monitoring.md) for the 07:17 UTC schedule, source settings, notification behaviour and reviewed baseline promotion. PR #20 and its manual monitor run passed on exact main `c799d07`; the first daily firing and notification delivery remain unobserved.
+The separate daily/manual workflow downloads the official Saleor 3.23 schema by default, compares it with the reviewed baseline and retains JSON/Markdown drift reports. Live introspection is optional. See [schema monitoring](docs/schema-monitoring.md) for the 07:17 UTC schedule, source settings, notification behaviour and reviewed baseline promotion. The first scheduled run `39107672846` passed on main `4660ce0`, with matching retained reports; notification settings and delivery remain unverified.

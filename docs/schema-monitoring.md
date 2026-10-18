@@ -64,4 +64,15 @@ Local HTTP tests cover SDL success, additions, domain breaks, invalid/empty/over
 
 ## Published acceptance - 2026-10-18
 
-PR #20 merged as `c799d0710e7e70fcceb12492ce49e9020126b298`. Exact-main CI [39078903688](https://github.com/GBrooks1970/saleor-graphql-automation/actions/runs/39078903688) and manual monitor [39078905171](https://github.com/GBrooks1970/saleor-graphql-automation/actions/runs/39078905171) passed. The downloaded artifact confirms that revision, SDL mode, zero domain breaks and 117 other differences. Scheduled firing and notification delivery are not yet observed.
+PR #20 merged as `c799d0710e7e70fcceb12492ce49e9020126b298`. Exact-main CI [39078903688](https://github.com/GBrooks1970/saleor-graphql-automation/actions/runs/39078903688) and manual monitor [39078905171](https://github.com/GBrooks1970/saleor-graphql-automation/actions/runs/39078905171) passed. The downloaded artifact confirms that revision, SDL mode, zero domain breaks and 117 other differences.
+
+### First scheduled execution verified
+
+[Run 39107672846](https://github.com/GBrooks1970/saleor-graphql-automation/actions/runs/39107672846) has event `schedule` and succeeded on `4660ce06dc2c0a234fc3f62678c1d9ff0b653665`. GitHub created it at 2026-10-18T07:26:35Z (08:26:35 BST), after the configured 07:17 UTC slot. This is automatic execution, distinct from the preceding manual run.
+
+Downloaded artifact `schema-drift-39107672846-1` (ID `12129560327`, 5205 bytes) contains `report.json` and `summary.md`. Both identify the same run revision and SDL source `https://raw.githubusercontent.com/saleor/saleor/3.23/saleor/graphql/schema.graphql`. Observation time: `2026-10-18T07:26:52.734Z`. Result: **compatible**, zero domain breaks, zero directive-spec differences and 117 other changes (the other-changes category can include dangerous changes).
+
+- Baseline SHA-256: `36a111ba8f822b25a62fa82df0d7e4477e1aebc611d70adb83f5006a5cf76624`.
+- Upstream SDL SHA-256: `bf37d116a6e04354cbb9c35a4ee1343ab0602269b2b4ee0f8872adaa03abec6d`.
+
+The verification watch was paused after assessing the run and artifacts. Notification settings and delivery remain **unverified**: the repository-subscription API returned HTTP 404 and the CLI identified the missing `notifications` scope. This does not establish that notifications are disabled. The owner must confirm their GitHub Actions notification preferences and destination separately; a successful scheduled run does not demonstrate failure-alert delivery. No notification settings, schema baseline or workflow were changed during this verification.
