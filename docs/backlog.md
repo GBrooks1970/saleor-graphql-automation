@@ -1,7 +1,7 @@
 # Canonical Project Backlog: saleor-graphql-automation
 
-**Current Version:** v9
-**Last Updated:** 2026-10-18
+**Current Version:** v10
+**Last Updated:** 2026-11-01
 **Project:** Fourteenth Portfolio Project (P-12) — Saleor GraphQL Automation  
 **Repository:** `GBrooks1970/saleor-graphql-automation`  
 
@@ -127,8 +127,45 @@
 
 ## 4. Maintenance follow-up (2026-10-18)
 
+This section retains the 18 October observations. The dated reconciliation in section 5 supersedes its dependency-risk and watch state; the delivery evidence remains historical evidence.
+
 - Transitive dependency patch: PR #21 updates `brace-expansion` 5.0.9 to 5.0.12. Only the corresponding lockfile entry changes; the full local verification gate passed. Publication and CI evidence are available on the PR.
-- Remaining audit: 9 high affected packages inherit the unpatched `braces` 3.0.3 stack-exhaustion advisory, GHSA-vfj7-8cjw-p6xm. No patched release was available at inspection. Keep this dependency risk open; do not downgrade Serenity to 2.x to satisfy audit output.
+- Historical audit (18 October): nine high affected packages inherited the then-active `braces` 3.0.3 advisory GHSA-vfj7-8cjw-p6xm. SGR-MAINT-01 below closes that specific advisory-based risk following its withdrawal; no framework downgrade was made.
 - Scheduled execution and report retention are verified by run `39107672846`; that observation follow-up is complete. Notification-settings verification is also complete: GitHub and email enabled for failed workflows only, default notification email configured, repository subscription Participating. Actual failure-alert delivery remains untested; neither settings nor a successful run proves delivery.
 
-- **Update (2026-10-18):** The owner-approved weekly compatible-fix watch is active for `braces` (Mondays at 09:00 in the app schedule). It checks the advisory and upstream releases, reports an actionable candidate, then pauses for approval; it does not modify dependencies or repositories. This maintenance batch is closed with the dependency risk tracked and actual alert delivery explicitly untested.
+- **Historical update (2026-10-18):** The owner approved a weekly compatible-fix watch for `braces`. The 1 November automation inventory no longer contains that watch; do not recreate it for the withdrawn advisory. Actual failure-alert delivery remains untested.
+
+## 5. Current maintenance status (2026-11-01)
+
+| ID | Item | Status | Priority |
+|---|---|---|---|
+| SGR-MAINT-01 | Reconcile the withdrawn braces advisory and obsolete watch claims | Done 2026-11-01; documentation publication awaiting owner review | LOW |
+| SGR-MAINT-02 | Review compatible remediation for the current dependency audit findings | Open; assessment only, no dependency change approved | HIGH |
+
+### SGR-MAINT-01: withdrawn braces advisory records
+
+GitHub [GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) was withdrawn at **2026-10-23T12:53:02Z** because the reported vulnerability is not practically exploitable. The official advisory was rechecked on 1 November. A fresh isolated lockfile-only audit reports no `braces` finding. This closes the specific advisory-based risk without claiming that all dependencies are healthy or that the package code changed.
+
+The local app automation inventory on 1 November contains no braces-fix watch. Its separate one-off `Verify Saleor scheduled schema monitor` automation is PAUSED; the daily GitHub schema monitor is independent. No automation or notification setting was changed in this reconciliation.
+
+Plan: [withdrawn advisory reconciliation](implementation-plans/2026-11-01_withdrawn-braces-records.md). Evidence and verification: [implementation log](implementation-logs/2026-11-01_withdrawn-braces-records.md).
+
+### SGR-MAINT-02: current dependency compatibility review
+
+**Status: Open. Priority: HIGH.** On 1 November, `npm audit --package-lock-only --ignore-scripts --json` against temporary copies of the current package manifests exited 1 with **five affected packages: two high and three moderate; zero critical**. These are package findings grouped into one compatibility-review item, not five implementation tickets:
+
+- HIGH: `zod` and its dependent `@serenity-js/html-reporter`. The report does not offer an automatic fix for this chain.
+- MODERATE: `minimatch`, `glob` and their dependent `@cucumber/cucumber`. npm proposes a Cucumber major change, which is not approved by this documentation task.
+
+Acceptance for a future, separately authorised implementation: assess exact dependency paths and supported versions, propose a compatible bounded change, preserve the existing gates and report generation, and verify the resulting audit and full project gate. Do not use a forced framework downgrade or treat withdrawal of the braces advisory as resolution of these other findings. The repository's `package.json` and `package-lock.json` hashes were unchanged by the audit.
+
+### Open backlog summary
+
+| Priority | Open items |
+|---|---:|
+| HIGH | 1 (SGR-MAINT-02) |
+| MEDIUM | 0 |
+| LOW | 0 |
+| **Total outstanding** | **1** |
+
+All 14 roadmap items and seven TRIAGE items remain delivered. Actual failure-alert delivery is an explicit evidence limitation, not an authorised implementation item; settings inspection and successful scheduled runs do not establish receipt.
