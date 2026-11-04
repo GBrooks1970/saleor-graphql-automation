@@ -4,9 +4,9 @@ created: 2026-11-03T15:59Z
 project: saleor-graphql-automation
 type: implementation-plan
 item: SGR-MAINT-02
-status: proposed
-approved: not yet
-delivered: not yet
+status: stage-a-implemented
+approved: 2026-11-03
+delivered: "2026-11-03 (Stage A HIGH remediation); Stage B MODERATE Cucumber 13 option remains separate"
 language: en-GB
 ---
 
@@ -80,11 +80,18 @@ Planning only: no implementation, dependency edits, branch changes, commits, pus
 
 | Decision | Options | Recommended | Owner's answer |
 |---|---|---|---|
-| HIGH remediation | Scoped Zod override / wait for upstream / broader upgrade | Approve Stage A scoped exact 4.6.6 override, conditional on reporter compatibility gates | Awaiting approval |
-| MODERATE chain | Separate Cucumber 13 stage / defer with open record / accept residual risk | Separate Stage B after Stage A evidence; no forced glob override | Awaiting approval |
-| Persistent CI audit gate | Add now / separate follow-up | Separate follow-up; retain manual audit acceptance here | Awaiting approval |
-| Publication | Owner-reviewed draft PRs / direct main | Separate project and handover PRs; owner merges | Awaiting approval |
+| HIGH remediation | Scoped Zod override / wait for upstream / broader upgrade | Approve Stage A scoped exact 4.6.6 override, conditional on reporter compatibility gates | Approved Stage A (`2026-11-03`) |
+| MODERATE chain | Separate Cucumber 13 stage / defer with open record / accept residual risk | Separate Stage B after Stage A evidence; no forced glob override | Retained as separate Stage B decision after Stage A evidence |
+| Persistent CI audit gate | Add now / separate follow-up | Separate follow-up; retain manual audit acceptance here | Separate follow-up; manual audit acceptance retained |
+| Publication | Owner-reviewed draft PRs / direct main | Separate project and handover PRs; owner merges | Approved — separate draft project and handover PRs |
 
 ## Outcome
 
 Assessment and proposed plan completed on 3 November 2026. The current audit reproduces five affected packages and identifies a bounded candidate for the HIGH chain plus a distinct parent-major option for the MODERATE chain. No implementation or compatibility success is claimed.
+
+**Stage A execution outcome (2026-11-03):** Following owner approval on 3 November 2026, Stage A was implemented on `codex/sgr-maint-02-dependency-remediation` from `main` (`ba76ef626a51685597fb05e6fa18fb59d744c631`):
+
+- **Baseline verification:** Pre-change `npm audit --audit-level=high --package-lock-only --ignore-scripts` exited `1` with `5` affected packages (`2 HIGH, 3 MODERATE, 0 LOW/CRITICAL`). Pre-change `npm run verify` exited `0` in `37.14 s`.
+- **Candidate graph & clean install:** Added `"overrides": { "@serenity-js/html-reporter": { "zod": "4.6.6" } }` in `package.json` and regenerated `package-lock.json` on Node `v24.18.0`. The lockfile diff modifies only `node_modules/zod` (`4.4.3` → `4.6.6`) and the root `"overrides"` entry; all six `@serenity-js/*` packages remain at `3.46.0` and `@cucumber/cucumber` remains at `12.9.0`. Clean `npm ci` and `npm ls zod @serenity-js/html-reporter @serenity-js/core @serenity-js/web` confirmed `@serenity-js/html-reporter@3.46.0` → `zod@4.6.6 overridden`.
+- **Post-change audit & verification gate:** `npm audit --audit-level=high --package-lock-only --ignore-scripts` exited `0` (`0 HIGH, 0 CRITICAL, 0 LOW, 3 MODERATE`). Full `npm run verify` exited `0` in `39.04 s` (`typecheck` clean, `56/56` unit tests across 14 suites in `5,148.72 ms`, `check:smoke-safety` 0 violations across 9 scenarios, `35/35` contract tests across 6 suites in `3,819.57 ms`, `3/3` smoke scenarios, `9/9` API scenarios, and `check:reports` `Complete reports: smoke=3, api=9; landing page generated.`). Traced `@serenity-js/html-reporter` Zod v4 schemas (`RunDataSchema.js`, `validation.js`, `ReportSummaryJson.js`) and inspected rendered artefacts under `target/site/serenity/`. Node 22 runtime check remains pending on this single-Node (`v24.18.0`) workstation.
+- **Residual MODERATE scope:** The 3 MODERATE package findings (`glob`, `minimatch`, `@cucumber/cucumber`) remain recorded openly under `SGR-MAINT-02` (`MEDIUM` priority in `docs/backlog.md` v11) pending a separate Stage B decision. Evidence recorded in [2026-11-03_sgr-maint-02-dependency-remediation.md](../implementation-logs/2026-11-03_sgr-maint-02-dependency-remediation.md).

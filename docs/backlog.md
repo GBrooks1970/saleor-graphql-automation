@@ -1,7 +1,7 @@
 # Canonical Project Backlog: saleor-graphql-automation
 
-**Current Version:** v10
-**Last Updated:** 2026-11-01
+**Current Version:** v11
+**Last Updated:** 2026-11-03
 **Project:** Fourteenth Portfolio Project (P-12) — Saleor GraphQL Automation  
 **Repository:** `GBrooks1970/saleor-graphql-automation`  
 
@@ -135,12 +135,12 @@ This section retains the 18 October observations. The dated reconciliation in se
 
 - **Historical update (2026-10-18):** The owner approved a weekly compatible-fix watch for `braces`. The 1 November automation inventory no longer contains that watch; do not recreate it for the withdrawn advisory. Actual failure-alert delivery remains untested.
 
-## 5. Current maintenance status (2026-11-01)
+## 5. Current maintenance status (2026-11-03)
 
 | ID | Item | Status | Priority |
 |---|---|---|---|
-| SGR-MAINT-01 | Reconcile the withdrawn braces advisory and obsolete watch claims | Done 2026-11-01; documentation publication awaiting owner review | LOW |
-| SGR-MAINT-02 | Review compatible remediation for the current dependency audit findings | Open; assessment only, no dependency change approved | HIGH |
+| SGR-MAINT-01 | Reconcile the withdrawn braces advisory and obsolete watch claims | Done 2026-11-01; merged in PR #24 (`2449d7d`, 2026-11-02); exact-main CI passed | LOW |
+| SGR-MAINT-02 | Review compatible remediation for the current dependency audit findings | Stage A HIGH remediation delivered 2026-11-03 (`0 HIGH`, `3 MODERATE` remaining); Stage B Cucumber 13 MODERATE option open for separate decision | MEDIUM |
 
 ### SGR-MAINT-01: withdrawn braces advisory records
 
@@ -148,23 +148,23 @@ GitHub [GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) 
 
 The local app automation inventory on 1 November contains no braces-fix watch. Its separate one-off `Verify Saleor scheduled schema monitor` automation is PAUSED; the daily GitHub schema monitor is independent. No automation or notification setting was changed in this reconciliation.
 
-Plan: [withdrawn advisory reconciliation](implementation-plans/2026-11-01_withdrawn-braces-records.md). Evidence and verification: [implementation log](implementation-logs/2026-11-01_withdrawn-braces-records.md).
+Published and merged in [PR #24](https://github.com/GBrooks1970/saleor-graphql-automation/pull/24) (`2449d7df6420d2561444fcab3dcb1e2b3137a452`, merged `2026-11-02T18:27:41Z`). Plan: [withdrawn advisory reconciliation](implementation-plans/2026-11-01_withdrawn-braces-records.md). Evidence and verification: [implementation log](implementation-logs/2026-11-01_withdrawn-braces-records.md).
 
-### SGR-MAINT-02: current dependency compatibility review
+### SGR-MAINT-02: current dependency compatibility review and Stage A HIGH remediation
 
-**Status: Open. Priority: HIGH.** On 1 November, `npm audit --package-lock-only --ignore-scripts --json` against temporary copies of the current package manifests exited 1 with **five affected packages: two high and three moderate; zero critical**. These are package findings grouped into one compatibility-review item, not five implementation tickets:
+**Status: Stage A delivered (HIGH findings cleared); residual MODERATE scope open. Priority: MEDIUM.** On 1 November (reconfirmed on 3 November before Stage A), `npm audit --package-lock-only --ignore-scripts --json` exited 1 with **five affected packages: two high and three moderate; zero low/critical**:
 
-- HIGH: `zod` and its dependent `@serenity-js/html-reporter`. The report does not offer an automatic fix for this chain.
-- MODERATE: `minimatch`, `glob` and their dependent `@cucumber/cucumber`. npm proposes a Cucumber major change, which is not approved by this documentation task.
+- **HIGH (resolved in Stage A, 2026-11-03):** `zod` ([GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5), affecting `<4.6.6`, patched in `4.6.6`) and its dependent `@serenity-js/html-reporter@3.46.0` (which pins `zod: "4.4.3"`, while upstream `@serenity-js/html-reporter@3.49.0` still pins `4.6.5`). Stage A adds the parent-scoped npm override `"@serenity-js/html-reporter": { "zod": "4.6.6" }` in `package.json`, updating only `node_modules/zod` (`4.4.3` → `4.6.6`) in `package-lock.json` while keeping all six `@serenity-js/*` packages at `3.46.0` and `@cucumber/cucumber` at `12.9.0`. Post-change `npm audit --audit-level=high --package-lock-only --ignore-scripts` exits **0** (`0 HIGH`, `0 CRITICAL`, `0 LOW`, `3 MODERATE`), and `npm run verify` passes in **39.04 s** (typecheck clean, `56/56` unit tests across 14 suites, `check:smoke-safety` 0 violations across 9 scenarios, `35/35` contract tests across 6 suites, `3/3` smoke scenarios, `9/9` API scenarios, and `check:reports` `Complete reports: smoke=3, api=9; landing page generated.`). **Override removal trigger:** remove `overrides["@serenity-js/html-reporter"].zod` once `@serenity-js/html-reporter` is upgraded to a release that declares `zod >= 4.6.6` natively.
+- **MODERATE (residual open scope — Stage B decision pending):** `glob` ([GHSA-3g3m-2fjr-6pw4](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4), fixed in `14.0.2`), `minimatch` ([GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249), fixed in `11.0.1`), and their dependent `@cucumber/cucumber@12.9.0`. Resolving this chain cleanly requires a separate Stage B migration to `@cucumber/cucumber@13.3.0` (or explicit owner risk acceptance), which remains outside Stage A.
 
-Acceptance for a future, separately authorised implementation: assess exact dependency paths and supported versions, propose a compatible bounded change, preserve the existing gates and report generation, and verify the resulting audit and full project gate. Do not use a forced framework downgrade or treat withdrawal of the braces advisory as resolution of these other findings. The repository's `package.json` and `package-lock.json` hashes were unchanged by the audit.
+Plan: [dependency compatibility remediation](implementation-plans/2026-11-03_sgr-maint-02-dependency-compatibility.md). Evidence and verification: [implementation log](implementation-logs/2026-11-03_sgr-maint-02-dependency-remediation.md).
 
 ### Open backlog summary
 
 | Priority | Open items |
 |---|---:|
-| HIGH | 1 (SGR-MAINT-02) |
-| MEDIUM | 0 |
+| HIGH | 0 |
+| MEDIUM | 1 (SGR-MAINT-02 — residual MODERATE Cucumber/glob/minimatch chain; Stage A HIGH chain delivered) |
 | LOW | 0 |
 | **Total outstanding** | **1** |
 
